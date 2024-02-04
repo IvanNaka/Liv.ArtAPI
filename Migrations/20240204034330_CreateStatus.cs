@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Liv.ArtAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDatabase : Migration
+    public partial class CreateStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,30 +62,15 @@ namespace Liv.ArtAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Avaliador",
+                name: "Status",
                 columns: table => new
                 {
-                    AvaliadorId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NomeCompleto = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CertificadoPath = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    DocumentoPath = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Formacao = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    CuradorId = table.Column<int>(type: "int", nullable: true),
-                    Username = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Senha = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
+                    NomeStatus = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NomeDescritivo = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Avaliador", x => x.AvaliadorId);
-                    table.ForeignKey(
-                        name: "FK_Avaliador_Curador_CuradorId",
-                        column: x => x.CuradorId,
-                        principalTable: "Curador",
-                        principalColumn: "CuradorId");
+                    table.PrimaryKey("PK_Status", x => x.NomeStatus);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,6 +152,42 @@ namespace Liv.ArtAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Avaliador",
+                columns: table => new
+                {
+                    AvaliadorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeCompleto = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CertificadoPath = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    Nacionalidade = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    DocumentoPath = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Formacao = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    CuradorId = table.Column<int>(type: "int", nullable: true),
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Avaliador", x => x.AvaliadorId);
+                    table.ForeignKey(
+                        name: "FK_Avaliador_Curador_CuradorId",
+                        column: x => x.CuradorId,
+                        principalTable: "Curador",
+                        principalColumn: "CuradorId");
+                    table.ForeignKey(
+                        name: "FK_Avaliador_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Status",
+                        principalColumn: "NomeStatus",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cartao",
                 columns: table => new
                 {
@@ -186,6 +207,33 @@ namespace Liv.ArtAPI.Migrations
                         column: x => x.CompradorId,
                         principalTable: "Comprador",
                         principalColumn: "AvaliadorId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lance",
+                columns: table => new
+                {
+                    LanceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Valor = table.Column<double>(type: "float", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompradorId = table.Column<int>(type: "int", nullable: true),
+                    LeilaoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lance", x => x.LanceId);
+                    table.ForeignKey(
+                        name: "FK_Lance_Comprador_CompradorId",
+                        column: x => x.CompradorId,
+                        principalTable: "Comprador",
+                        principalColumn: "AvaliadorId");
+                    table.ForeignKey(
+                        name: "FK_Lance_Leilao_LeilaoId",
+                        column: x => x.LeilaoId,
+                        principalTable: "Leilao",
+                        principalColumn: "LeilaoId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -223,33 +271,6 @@ namespace Liv.ArtAPI.Migrations
                         column: x => x.ProprietarioId,
                         principalTable: "Proprietario",
                         principalColumn: "ProprietarioId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Lance",
-                columns: table => new
-                {
-                    LanceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Valor = table.Column<double>(type: "float", nullable: false),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompradorId = table.Column<int>(type: "int", nullable: true),
-                    LeilaoId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lance", x => x.LanceId);
-                    table.ForeignKey(
-                        name: "FK_Lance_Comprador_CompradorId",
-                        column: x => x.CompradorId,
-                        principalTable: "Comprador",
-                        principalColumn: "AvaliadorId");
-                    table.ForeignKey(
-                        name: "FK_Lance_Leilao_LeilaoId",
-                        column: x => x.LeilaoId,
-                        principalTable: "Leilao",
-                        principalColumn: "LeilaoId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -314,6 +335,11 @@ namespace Liv.ArtAPI.Migrations
                 name: "IX_Avaliador_CuradorId",
                 table: "Avaliador",
                 column: "CuradorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Avaliador_StatusId",
+                table: "Avaliador",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cartao_CompradorId",
@@ -418,6 +444,9 @@ namespace Liv.ArtAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comprador");
+
+            migrationBuilder.DropTable(
+                name: "Status");
 
             migrationBuilder.DropTable(
                 name: "Curador");

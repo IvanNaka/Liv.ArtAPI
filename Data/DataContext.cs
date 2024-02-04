@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Hotel
+namespace LivArt
 {
-    public class HotelContext : DbContext{
+    public class LivArtContext : DbContext{
         public DbSet<Avaliador> Avaliador {get; set;} = null!;
         public DbSet<Cartao> Cartao {get; set;} = null!;
         public DbSet<Comprador> Comprador {get; set;} = null!;
@@ -15,6 +15,7 @@ namespace Hotel
         public DbSet<ObraArte> ObraArte {get; set;} = null!;
         public DbSet<Pagamento> Pagamento {get; set;} = null!;
         public DbSet<Proprietario> Proprietario {get; set;} = null!;
+        public DbSet<Status> Status {get; set;} = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=Ivan\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
