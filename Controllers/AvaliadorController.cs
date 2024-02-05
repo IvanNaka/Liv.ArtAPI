@@ -65,33 +65,18 @@ namespace LivArt.Controllers
         }
 
         [Authorize]
-        [HttpPost("teste_autorizacao")]
-        public IActionResult Teste(
-            [FromBody] AvaliadorLoginRepostory avaliadorLogin,
-            [FromServices] AvaliadorRepository avaliadorRepository
-            )
-        {
-            //var stream = _config["Jwt:Key"];  
-            //var handler = new JwtSecurityTokenHandler();
-            //var jwtSecurityToken = handler.ReadJwtToken(token);
-            string Username = avaliadorLogin.Username;
-            string senha = avaliadorLogin.Senha;
-            var user = avaliadorRepository.Login(Username, senha);
-            return Ok(user);
-        }
-
-        [Authorize]
         [HttpGet("obras")]
         public IActionResult GetObrasAvaliador(
-            [FromBody] AvaliadorLoginRepostory avaliadorLogin,
-            [FromServices] AvaliadorRepository avaliadorRepository
+            [FromQuery] ObrasArteRepository filtros,
+            [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            string? sessionId = HttpContext.Session.GetString("_avaliadorId");
-            string Username = avaliadorLogin.Username;
-            string senha = avaliadorLogin.Senha;
-            var user = avaliadorRepository.Login(Username, senha);
-            return Ok(user);
+            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
+            if (avaliadorId == null){
+                return Unauthorized("Acesso negado.");
+            }
+            List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
+            return Ok(listaObras);
         }
     }
 }

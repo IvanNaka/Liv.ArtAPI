@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDistributedMemoryCache(); 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60); 
+    options.IdleTimeout = TimeSpan.FromDays(7); 
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
