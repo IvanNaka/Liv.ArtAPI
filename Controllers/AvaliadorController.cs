@@ -13,7 +13,7 @@ namespace LivArt.Controllers
     public class AvaliadorController : Controller
     {
         private IConfiguration _config;
-        public AvaliadorController(IConfiguration config) 
+        public AvaliadorController(IConfiguration config)
         {
             _config = config;
         }
@@ -38,8 +38,13 @@ namespace LivArt.Controllers
             string Username = loginRequest.Username;
             string senha = loginRequest.Senha;
             var user = avaliadorRepository.Login(Username, senha);
-            if(user == null){
+            if (user == null)
+            {
                 return NotFound("Usuário e/ou senha incorreto!");
+            }
+            if (user.StatusId == "pendente_avaliador")
+            {
+                return BadRequest("Usuário aguardando confirmação da Curadoria");
             }
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -50,22 +55,26 @@ namespace LivArt.Controllers
               expires: DateTime.Now.AddDays(30),
               signingCredentials: credentials);
 
-            var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
+            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
 
             return Ok(token);
         }
 
+
         [Authorize]
-        [HttpPost("teste_autorizacao")]
-        public IActionResult Teste(
-            [FromBody] AvaliadorLoginRepostory avaliadorLogin,
-            [FromServices] AvaliadorRepository avaliadorRepository
+        [HttpGet("obras")]
+        public IActionResult GetObrasAvaliador(
+            [FromQuery] ObrasArteRepository filtros,
+            [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            string Username = avaliadorLogin.Username;
-            string senha = avaliadorLogin.Senha;
-            var user = avaliadorRepository.Login(Username, senha);
-            return Ok(user);
+            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
+            if (avaliadorId == null)
+            {
+                return Unauthorized("Acesso negado.");
+            }
+            List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
+            return Ok(listaObras);
         }
     }
 }

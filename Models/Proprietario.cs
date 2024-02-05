@@ -12,7 +12,7 @@ public class Proprietario
 
     [StringLength(256)]
     public string DocumentoPath { get; set; }
-    
+
     [StringLength(128)]
     public string Email { get; set; }
 
@@ -28,6 +28,10 @@ public class Proprietario
     [ForeignKey("Endereco")]
     public int? EnderecoId { get; set; }
     public Endereco? Endereco { get; set; }
+
+    [ForeignKey("Status")]
+    public string StatusId { get; set; }
+    public Status Status { get; set; }
 
     [ForeignKey("Curador")]
     public int? CuradorId { get; set; }

@@ -17,7 +17,8 @@ public class AvaliadorCadastroRepostory
     public string Username { get; set; }
     public string Senha { get; set; }
 
-    public Avaliador AvaliadorCadastro (){
+    public Avaliador AvaliadorCadastro()
+    {
         string NomeCompleto = $"{this.Nome} {this.Sobrenome}";
         Avaliador avaliadorObj = new Avaliador();
         avaliadorObj.NomeCompleto = NomeCompleto;
