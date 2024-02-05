@@ -11,7 +11,7 @@ public class ObraArte
     [StringLength(256)]
     public string Titulo { get; set; }
 
-    public DateTime? DataCriacao { get; set; }
+    public DateOnly? DataCriacao { get; set; }
 
     [StringLength(128)]
     public string? Dimensao { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace LivArt.Controllers
@@ -42,20 +43,20 @@ namespace LivArt.Controllers
             {
                 return NotFound("Usuário e/ou senha incorreto!");
             }
-            if (user.StatusId == "pendente_avaliador")
-            {
-                return BadRequest("Usuário aguardando confirmação da Curadoria");
-            }
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                new Claim(JwtRegisteredClaimNames.NameId, user.AvaliadorId.ToString()),
+            };
             var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               expires: DateTime.Now.AddDays(30),
               signingCredentials: credentials);
 
-            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+            var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
 
             return Ok(token);
         }
@@ -68,13 +69,10 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
-            if (avaliadorId == null)
-            {
-                return Unauthorized("Acesso negado.");
-            }
-            List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
-            return Ok(listaObras);
+            string Username = avaliadorLogin.Username;
+            string senha = avaliadorLogin.Senha;
+            var user = avaliadorRepository.Login(Username, senha);
+            return Ok(user);
         }
     }
 }
