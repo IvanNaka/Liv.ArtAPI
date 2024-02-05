@@ -35,7 +35,6 @@ public class Avaliador
     public int? CuradorId { get; set; }
     public Curador? Curador { get; set; }
 
-
     [ForeignKey("Status")]
     public string StatusId { get; set; }
     public Status Status { get; set; }
