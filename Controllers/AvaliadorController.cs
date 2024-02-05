@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace LivArt.Controllers
@@ -46,15 +47,20 @@ namespace LivArt.Controllers
             }
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                new Claim(JwtRegisteredClaimNames.NameId, user.AvaliadorId.ToString()),
+            };
             var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               expires: DateTime.Now.AddDays(30),
               signingCredentials: credentials);
 
             var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
-
+            HttpContext.Session.SetInt32("_avaliadorId", user.AvaliadorId);
+            HttpContext.Session.SetString("_avaliadorUsername", user.Username);
             return Ok(token);
         }
 
@@ -65,6 +71,23 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
+            //var stream = _config["Jwt:Key"];  
+            //var handler = new JwtSecurityTokenHandler();
+            //var jwtSecurityToken = handler.ReadJwtToken(token);
+            string Username = avaliadorLogin.Username;
+            string senha = avaliadorLogin.Senha;
+            var user = avaliadorRepository.Login(Username, senha);
+            return Ok(user);
+        }
+
+        [Authorize]
+        [HttpGet("obras")]
+        public IActionResult GetObrasAvaliador(
+            [FromBody] AvaliadorLoginRepostory avaliadorLogin,
+            [FromServices] AvaliadorRepository avaliadorRepository
+            )
+        {
+            string? sessionId = HttpContext.Session.GetString("_avaliadorId");
             string Username = avaliadorLogin.Username;
             string senha = avaliadorLogin.Senha;
             var user = avaliadorRepository.Login(Username, senha);
