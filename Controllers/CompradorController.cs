@@ -22,8 +22,8 @@ namespace LivArt.Controllers
 
         [HttpPost("cadastrocomprador")]
         public IActionResult CadastroComprador(
-            [FromBody] CompradorCadastroRepostory compradorForm
-            //[FromServices] CompradorRepostory compradorRepository
+            [FromBody] CompradorCadastroRepostory compradorForm,
+            [FromServices] CompradorRepository compradorRepository
             )
         {
             Comprador comprador = compradorForm.CompradorCadastro();

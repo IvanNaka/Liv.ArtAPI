@@ -40,6 +40,10 @@ public class ObrasArteRepository
         if (filtros.dataCriacao.HasValue){
             listaObras = listaObras.Where(b => b.DataCriacao.Equals(filtros.dataCriacao));
         }
-        return listaObras.ToList();
+        return listaObras.OrderByDescending(b => b.ObraId).ToList();
+    }
+    public ObraArte? GetObrasId(int? obraId){
+        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        return obraArte;
     }
 }
