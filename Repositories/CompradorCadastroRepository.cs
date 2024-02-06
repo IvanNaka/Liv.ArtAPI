@@ -10,12 +10,27 @@ public class CompradorCadastroRepostory
     public string DocumentoPath { get; set; }
     public string Email { get; set; }
     public string Telefone { get; set; }
-    public string Endereco { get; set; }
-    public string Pagamento { get; set; }
     public string Username { get; set; }
     public string Senha { get; set; }
+    public string Logradouro { get; set; }
+    public int Numero { get; set; }
+    public string? Complemento { get; set; }
+    public string Bairro { get; set; }
+    public string Estado { get; set; }
+    public string País { get; set; }
 
-    public Comprador CompradorCadastro()
+    public Endereco EnderecoCadastro()
+    {
+        Endereco enderecoObj = new Endereco();
+        enderecoObj.Logradouro = this.Logradouro;   
+        enderecoObj.Numero = this.Numero;
+        enderecoObj.Complemento = this.Complemento;
+        enderecoObj.Bairro = this.Bairro;
+        enderecoObj.Estado = this.Estado;
+        enderecoObj.País = this.País;
+        return enderecoObj;
+    }
+    public Comprador CompradorCadastro(Endereco enderecoObj)
     {
         string NomeCompleto = $"{this.Nome} {this.Sobrenome}";
         Comprador compradorObj = new Comprador();
@@ -24,7 +39,7 @@ public class CompradorCadastroRepostory
         compradorObj.DocumentoPath = this.DocumentoPath;
         compradorObj.Email = this.Email;
         compradorObj.Telefone = this.Telefone;
-        //compradorObj.Endereco = this.Endereco;
+        compradorObj.Endereco = enderecoObj;
         compradorObj.Username = this.Username;
         compradorObj.Senha = this.Senha;
         return compradorObj;

@@ -11,7 +11,7 @@ public class Endereco
     public int Numero { get; set; }
 
     [StringLength(256)]
-    public string Complemento { get; set; }
+    public string? Complemento { get; set; }
     
     [StringLength(64)]
     public string Bairro { get; set; }

@@ -23,12 +23,15 @@ namespace LivArt.Controllers
         [HttpPost("cadastro")]
         public IActionResult CadastroComprador(
             [FromBody] CompradorCadastroRepostory compradorForm,
-            [FromServices] CompradorRepository compradorRepository
+            [FromServices] CompradorRepository compradorRepository,
+            [FromServices] EnderecoRepository enderecoRepository
             )
         {
-            Comprador comprador = compradorForm.CompradorCadastro();
+            Endereco enderecoObj = compradorForm.EnderecoCadastro();
+            enderecoRepository.Save(enderecoObj);
+            Comprador comprador = compradorForm.CompradorCadastro(enderecoObj);
             compradorRepository.Save(comprador);
-            return Ok();
+            return Ok(comprador);
         }
 
         [HttpPost("login")]
