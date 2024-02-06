@@ -9221,19 +9221,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ivann\\.nuget\\packages\\": {}
+    "C:\\Users\\CPU\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ivann\\Downloads\\C#\\Liv.ArtAPI\\Liv.ArtAPI.csproj",
+      "projectUniqueName": "D:\\VOLVO ARTE API\\Liv.ArtAPI\\Liv.ArtAPI.csproj",
       "projectName": "Liv.ArtAPI",
-      "projectPath": "C:\\Users\\ivann\\Downloads\\C#\\Liv.ArtAPI\\Liv.ArtAPI.csproj",
-      "packagesPath": "C:\\Users\\ivann\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ivann\\Downloads\\C#\\Liv.ArtAPI\\obj\\",
+      "projectPath": "D:\\VOLVO ARTE API\\Liv.ArtAPI\\Liv.ArtAPI.csproj",
+      "packagesPath": "C:\\Users\\CPU\\.nuget\\packages\\",
+      "outputPath": "D:\\VOLVO ARTE API\\Liv.ArtAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ivann\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\CPU\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -9315,7 +9315,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
