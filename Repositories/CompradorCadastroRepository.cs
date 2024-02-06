@@ -25,7 +25,6 @@ public class CompradorCadastroRepostory
         compradorObj.Email = this.Email;
         compradorObj.Telefone = this.Telefone;
         //compradorObj.Endereco = this.Endereco;
-        //compradorObj.Pagamento = this.Pagamento;
         compradorObj.Username = this.Username;
         compradorObj.Senha = this.Senha;
         return compradorObj;

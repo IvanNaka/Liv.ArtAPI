@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class Comprador
 {
     [Key]
-    public int AvaliadorId { get; set; }
+    public int CompradorId { get; set; }
 
     [StringLength(128)]
     public string NomeCompleto { get; set; }
