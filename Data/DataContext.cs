@@ -19,7 +19,7 @@ namespace LivArt
         public DbSet<Status> Status { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-VKHEAAQ\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(@"Server=IVAN\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,16 @@ namespace LivArt
                 .HasOne(p => p.Comprador)
                 .WithMany(c => c.Pagamento)
                 .HasForeignKey(p => p.CompradorId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Proprietario>()
+                .HasOne(p => p.Status)
+                .WithMany(c => c.Proprietario)
+                .HasForeignKey(p => p.StatusId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Avaliador>()
+                .HasOne(p => p.Status)
+                .WithMany(c => c.Avaliador)
+                .HasForeignKey(p => p.StatusId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

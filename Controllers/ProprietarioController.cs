@@ -70,10 +70,12 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            string Username = proprietarioLogin.Username;
-            string senha = proprietarioLogin.Senha;
-            var user = proprietarioRepository.Login(Username, senha);
-            return Ok(user);
+            //string Username = proprietarioLogin.Username;
+            //string senha = proprietarioLogin.Senha;
+            //var user = proprietarioRepository.Login(Username, senha);
+            //return Ok(user);
+            return Ok();
+
         }
     }
 }

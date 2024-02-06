@@ -137,6 +137,10 @@ C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\refint\Liv.ArtAPI.dll
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.pdb
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.genruntimeconfig.cache
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\ref\Liv.ArtAPI.dll
+<<<<<<< HEAD
+C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.sourcelink.json
+C:\Users\ivann\Downloads\C#\Liv.ArtAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+=======
 D:\VOLVO ARTE API\Liv.ArtAPI\bin\Debug\net8.0\appsettings.Development.json
 D:\VOLVO ARTE API\Liv.ArtAPI\bin\Debug\net8.0\appsettings.json
 D:\VOLVO ARTE API\Liv.ArtAPI\bin\Debug\net8.0\Liv.ArtAPI.exe
@@ -278,3 +282,4 @@ D:\VOLVO ARTE API\Liv.ArtAPI\obj\Debug\net8.0\refint\Liv.ArtAPI.dll
 D:\VOLVO ARTE API\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.pdb
 D:\VOLVO ARTE API\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.genruntimeconfig.cache
 D:\VOLVO ARTE API\Liv.ArtAPI\obj\Debug\net8.0\ref\Liv.ArtAPI.dll
+>>>>>>> 45680c45af6fe366ca0c4d8492b58d991846408c

@@ -8,4 +8,6 @@ public class Status
     [StringLength(128)]
     public string NomeDescritivo { get; set; }
 
+    public ICollection<Proprietario>? Proprietario { get; set; }
+    public ICollection<Avaliador>? Avaliador { get; set; }
 }
