@@ -22,12 +22,12 @@ namespace LivArt.Controllers
 
         [HttpPost("cadastrocomprador")]
         public IActionResult CadastroComprador(
-            [FromBody] CompradorCadastroRepostory compradorForm,
-            [FromServices] CompradorRepostory compradorRepository
+            [FromBody] CompradorCadastroRepostory compradorForm
+            //[FromServices] CompradorRepostory compradorRepository
             )
         {
             Comprador comprador = compradorForm.CompradorCadastro();
-            compradorRepository.Save(comprador);
+            //compradorRepository.Save(comprador);
             return Ok();
         }
 
@@ -49,7 +49,7 @@ namespace LivArt.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(JwtRegisteredClaimNames.NameId, user.CompradorId.ToString()),
+                //new Claim(JwtRegisteredClaimNames.NameId, user.CompradorId.ToString()),
             };
             var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
