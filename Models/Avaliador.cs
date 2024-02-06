@@ -8,7 +8,7 @@ public class Avaliador
     [StringLength(128)]
     public string NomeCompleto { get; set; }
 
-    public DateTime DataNascimento { get; set; }
+    public DateOnly DataNascimento { get; set; }
 
     [StringLength(256)]
     public string CertificadoPath { get; set; }

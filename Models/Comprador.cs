@@ -7,7 +7,7 @@ public class Comprador
 
     [StringLength(128)]
     public string NomeCompleto { get; set; }
-    public DateTime DataNascimento { get; set; }
+    public DateOnly DataNascimento { get; set; }
 
     [StringLength(256)]
     public string DocumentoPath { get; set; }

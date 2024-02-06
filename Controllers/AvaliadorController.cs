@@ -14,7 +14,7 @@ namespace LivArt.Controllers
     public class AvaliadorController : Controller
     {
         private IConfiguration _config;
-        public AvaliadorController(IConfiguration config) 
+        public AvaliadorController(IConfiguration config)
         {
             _config = config;
         }
