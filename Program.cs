@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<LivArtContext>();
 builder.Services.AddTransient<AvaliadorRepository>();
+builder.Services.AddTransient<ProprietarioRepository>();
+builder.Services.AddTransient<CompradorRepository>();
+builder.Services.AddTransient<EnderecoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

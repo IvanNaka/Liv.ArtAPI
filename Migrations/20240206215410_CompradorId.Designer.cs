@@ -4,6 +4,7 @@ using LivArt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Liv.ArtAPI.Migrations
 {
     [DbContext(typeof(LivArtContext))]
-    partial class LivArtContextModelSnapshot : ModelSnapshot
+    [Migration("20240206215410_CompradorId")]
+    partial class CompradorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,6 +246,7 @@ namespace Liv.ArtAPI.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("Complemento")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
