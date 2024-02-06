@@ -65,7 +65,7 @@ namespace LivArt.Controllers
         }
 
         [Authorize]
-        [HttpGet("obras")]
+        [HttpGet("lista_obras")]
         public IActionResult GetObrasAvaliador(
             [FromQuery] ObrasArteRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
@@ -77,6 +77,35 @@ namespace LivArt.Controllers
             }
             List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
             return Ok(listaObras);
+        }
+
+        [Authorize]
+        [HttpGet("obra/{obraId}")]
+        public IActionResult GetObra(
+            int obraId,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            ObraArte obra = obrasArteRepository.GetObrasId(obraId);
+            if (obra == null){
+                return NotFound("Não foi possível encontrar a obra desejada.");
+            }
+            return Ok(obra);
+        }
+
+        [HttpPost("cadastro/laudo")]
+        public IActionResult CadastroLaudo(
+            [FromBody] LaudoCadastroRepostory laudoForm,
+            [FromServices] LaudoRepository laudoRepository
+            )
+        {
+            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
+            if (avaliadorId == null){
+                return Unauthorized("Acesso negado.");
+            }
+            Laudo laudo = laudoForm.Cadastro(avaliadorId);
+            laudoRepository.Save(laudo);
+            return Ok();
         }
     }
 }
