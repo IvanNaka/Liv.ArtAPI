@@ -9,3 +9,5 @@ obj/Debug/net8.0/Liv.ArtAPI.pdb
 obj/Debug/net8.0/Liv.ArtAPI.sourcelink.json
 obj/Debug/net8.0/ref/Liv.ArtAPI.dll
 obj/Debug/net8.0/refint/Liv.ArtAPI.dll
+
+.fake

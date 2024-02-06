@@ -58,10 +58,10 @@ namespace LivArt.Controllers
               signingCredentials: credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
-
+            HttpContext.Session.SetInt32("_proprietarioId", user.ProprietarioId);
+            HttpContext.Session.SetString("_proprietarioUsername", user.Username);
             return Ok(token);
         }
-
 
         [Authorize]
         [HttpGet("obras")]
