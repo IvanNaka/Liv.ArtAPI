@@ -137,3 +137,5 @@ C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\refint\Liv.ArtAPI.dll
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.pdb
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.genruntimeconfig.cache
 C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\ref\Liv.ArtAPI.dll
+C:\Users\ivann\Downloads\C#\Liv.ArtAPI\obj\Debug\net8.0\Liv.ArtAPI.sourcelink.json
+C:\Users\ivann\Downloads\C#\Liv.ArtAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
