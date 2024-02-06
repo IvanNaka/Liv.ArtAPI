@@ -6,14 +6,12 @@ public class CompradorCadastroRepostory
 
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
-    public DateTime DataNascimento { get; set; }
-    public string CPF { get; set; }
-    public string CertificadoPath { get; set; }
+    public DateOnly DataNascimento { get; set; }
     public string DocumentoPath { get; set; }
-    public string Formacao { get; set; }
-    public string Nacionalidade { get; set; }
     public string Email { get; set; }
     public string Telefone { get; set; }
+    public string Endereco { get; set; }
+    public string Pagamento { get; set; }
     public string Username { get; set; }
     public string Senha { get; set; }
 
@@ -26,6 +24,8 @@ public class CompradorCadastroRepostory
         compradorObj.DocumentoPath = this.DocumentoPath;
         compradorObj.Email = this.Email;
         compradorObj.Telefone = this.Telefone;
+        compradorObj.Endereco = this.Endereco;
+        compradorObj.Pagamento = this.Pagamento;
         compradorObj.Username = this.Username;
         compradorObj.Senha = this.Senha;
         return compradorObj;

@@ -9,8 +9,7 @@ namespace Liv.ArtAPI.Repositories
     {
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public string CPF { get; set; }
+        public DateOnly DataNascimento { get; set; }
         public string CertificadoPath { get; set; }
         public string DocumentoPath { get; set; }
         public string Formacao { get; set; }
@@ -26,7 +25,6 @@ namespace Liv.ArtAPI.Repositories
             Proprietario proprietarioObj = new Proprietario();
             proprietarioObj.NomeCompleto = NomeCompleto;
             proprietarioObj.DataNascimento = this.DataNascimento;
-            proprietarioObj.CPF = this.CPF;
             proprietarioObj.DocumentoPath = this.DocumentoPath;
             proprietarioObj.Email = this.Email;
             proprietarioObj.Telefone = this.Telefone;

@@ -6,7 +6,7 @@ public class AvaliadorCadastroRepostory
 
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
-    public DateTime DataNascimento { get; set; }
+    public DateOnly DataNascimento { get; set; }
     public string CPF { get; set; }
     public string CertificadoPath { get; set; }
     public string DocumentoPath { get; set; }
