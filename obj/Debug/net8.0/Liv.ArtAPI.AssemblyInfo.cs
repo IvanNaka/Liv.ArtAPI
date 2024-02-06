@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Liv.ArtAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc5c6d28af6a668f3067d163fc3dcbe0f8d63fdc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a431d60abb36a1ec390c3232fb674a29736a8a90")]
 [assembly: System.Reflection.AssemblyProductAttribute("Liv.ArtAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Liv.ArtAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
