@@ -130,5 +130,94 @@ namespace LivArt.Controllers
             }
             return Ok(proprietario);
         }
+
+        [Authorize]
+        [HttpGet("lista/obras")]
+        public IActionResult GetObrasAvaliador(
+            [FromQuery] ObrasArteFiltrosRepository filtros,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            List<ObraArte> listaObras = obrasArteRepository.GetObras(filtros);
+            if (listaObras == null){
+                return NotFound("Não foram encontradas obras disponíveis");
+            }
+            return Ok(listaObras);
+        }
+
+        [Authorize]
+        [HttpGet("obra/{obraId}")]
+        public IActionResult GetObra(
+            int obraId,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            ObraArte obra = obrasArteRepository.GetObrasId(obraId);
+            if (obra == null){
+                return NotFound("Não foi possível encontrar a obra desejada.");
+            }
+            return Ok(obra);
+        }
+        [Authorize]
+        [HttpGet("lista/laudo")]
+        public IActionResult GetLaudosDisponiveis(
+            [FromQuery] LaudosFiltroRepository filtros,
+            [FromServices] LaudoRepository laudoRepository
+            )
+        {
+            List<Laudo> listaLaudos = laudoRepository.GetLaudos(filtros);
+            if (listaLaudos == null){
+                return NotFound("Não foram encontrados laudos disponíveis");
+            }
+            return Ok(listaLaudos);
+        }
+
+        [Authorize]
+        [HttpGet("laudo/{laudoId}")]
+        public IActionResult GetLaudo(
+            int laudoId,
+            [FromServices] LaudoRepository laudoRepository
+            )
+        {
+            Laudo laudo = laudoRepository.GetLaudo(laudoId);
+            if (laudo == null){
+                return NotFound("Não foi possível encontrar o laudo desejado.");
+            }
+            return Ok(laudo);
+        }        
+
+        [HttpPost("cadastro/leilao")]
+        public IActionResult CadastroLeilao(
+            [FromBody] LeilaoCadastroRepository leilaoForm,
+            [FromServices] LeilaoRepository leilaoRepository
+            )
+        {
+            Leilao leilao = leilaoForm.Cadastro();
+            leilaoRepository.Save(leilao);
+            return Ok();
+        }
+        [Authorize]
+        [HttpGet("lista/leilao")]
+        public IActionResult GetLeiloesDisponiveis(
+            [FromServices] LeilaoRepository leilaoRepository
+            )
+        {
+            List<Leilao>? listaLeiloes = leilaoRepository.GetLeiloes();
+            if (listaLeiloes == null){
+                return NotFound("Não foram encontrados leiloes disponíveis");
+            }
+            return Ok(listaLeiloes);
+        }
+
+        [HttpPost("cadastro/lote")]
+        public IActionResult CadastroLote(
+            [FromBody] LoteCadastroRepostory loteForm,
+            [FromServices] LoteRepository loteRepository
+            )
+        {
+            Lote lote = loteForm.Cadastro();
+            loteRepository.Save(lote);
+            return Ok();
+        }
     }
 }

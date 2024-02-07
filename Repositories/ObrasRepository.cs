@@ -58,7 +58,7 @@ public class ObrasArteRepository
         var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
         return obraArte;
     }
-    public List<ObraArte>? GetObras(ObrasArteRepository filtros)
+    public List<ObraArte>? GetObras(ObrasArteFiltrosRepository filtros)
     {
         var listaObras = _context.ObraArte.AsQueryable();
         if (!string.IsNullOrEmpty(filtros.artista))
