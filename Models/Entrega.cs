@@ -15,4 +15,8 @@ public class Entrega
     [ForeignKey("Proprietario")]
     public int ProprietarioId { get; set; }
     public Proprietario Proprietario { get; set; }
+    
+    [ForeignKey("Comprador")]
+    public int CompradorId { get; set; }
+    public Comprador Comprador { get; set; }
 }
