@@ -4,6 +4,7 @@ using LivArt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Liv.ArtAPI.Migrations
 {
     [DbContext(typeof(LivArtContext))]
-    partial class LivArtContextModelSnapshot : ModelSnapshot
+    [Migration("20240207002555_ValoresPagamento")]
+    partial class ValoresPagamento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -651,9 +654,8 @@ namespace Liv.ArtAPI.Migrations
                         .HasForeignKey("AvaliadorId");
 
                     b.HasOne("Lote", "Lote")
-                        .WithMany("ObraArte")
-                        .HasForeignKey("LoteId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithMany()
+                        .HasForeignKey("LoteId");
 
                     b.HasOne("Proprietario", "Proprietario")
                         .WithMany()
@@ -713,11 +715,6 @@ namespace Liv.ArtAPI.Migrations
             modelBuilder.Entity("Comprador", b =>
                 {
                     b.Navigation("Pagamento");
-                });
-
-            modelBuilder.Entity("Lote", b =>
-                {
-                    b.Navigation("ObraArte");
                 });
 
             modelBuilder.Entity("Status", b =>

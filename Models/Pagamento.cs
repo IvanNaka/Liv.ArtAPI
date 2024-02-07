@@ -6,7 +6,9 @@ public class Pagamento
     public int PagamentoId { get; set; }
 
     public DateTime Data { get; set; }
-    public double Valor { get; set; }
+    public double ValorFinal { get; set; }
+    public double ValorProprietario { get; set; }
+    public double ValorAvaliador { get; set; }
 
     [ForeignKey("Comprador")]
     public int CompradorId { get; set; }

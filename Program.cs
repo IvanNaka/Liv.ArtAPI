@@ -11,6 +11,7 @@ builder.Services.AddTransient<AvaliadorRepository>();
 builder.Services.AddTransient<ProprietarioRepository>();
 builder.Services.AddTransient<CompradorRepository>();
 builder.Services.AddTransient<EnderecoRepository>();
+builder.Services.AddTransient<LeilaoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -64,5 +64,30 @@ namespace LivArt.Controllers
             HttpContext.Session.SetString("_compradorUsername", user.Username);
             return Ok(token);
         }
+        [Authorize]
+        [HttpGet("lista_obras")]
+        public IActionResult GetObras(
+            [FromQuery] ObrasArteRepository filtros,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            List<ObraArte>? listaObras = obrasArteRepository.GetObras(filtros);
+            if (listaObras == null){
+                return NotFound("Não foram encontradas obras");
+            }
+            return Ok(listaObras);
+        }
+        [Authorize]
+        [HttpGet("lista_leiloes")]
+        public IActionResult GetLeiloes(
+            [FromServices] LeilaoRepository leilaoRepository
+            )
+        {
+            List<Leilao>? listaLeilao = leilaoRepository.GetLeiloes();
+            if (listaLeilao == null){
+                return NotFound("Não foram encontrados leilões disponíveis");
+            }
+            return Ok(listaLeilao);
+        }
     }
 }

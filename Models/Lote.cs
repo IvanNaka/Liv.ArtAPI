@@ -10,4 +10,6 @@ public class Lote
 
     [StringLength(256)]
     public string Descricao { get; set; }
+
+    public ICollection<ObraArte>? ObraArte { get; set; }
 }
