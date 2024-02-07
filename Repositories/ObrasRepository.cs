@@ -3,8 +3,8 @@ using LivArt;
 public interface IObrasRepository
 {
     void Save(Avaliador avaliador);
-    void GetObrasAvaliador (string Username, string Senha);
-}   
+    void GetObrasAvaliador(string Username, string Senha);
+}
 
 public class ObrasArteRepository
 {
@@ -16,55 +16,78 @@ public class ObrasArteRepository
     public string? tecnica;
     public string? proprietario;
     public int? loteId;
-    public ObrasArteRepository(LivArtContext context){
+    public ObrasArteRepository(LivArtContext context)
+    {
         _context = context;
     }
 
-    public void Save(Avaliador avaliador){
+    public void Save(Avaliador avaliador)
+    {
         _context.Avaliador.Add(avaliador);
         _context.SaveChanges();
     }
-    public List<ObraArte>? GetObrasAvaliador(int? avaliadorId, ObrasArteRepository filtros){
+
+    //public void Save(ObraArte ObraArte)
+    //{
+    //    _context.ObraArte.Add(ObraArte);
+    //    _context.SaveChanges();
+    //}
+
+    public List<ObraArte>? GetObrasAvaliador(int? avaliadorId, ObrasArteRepository filtros)
+    {
         var listaObras = _context.ObraArte.Where(b => b.AvaliadorId.Equals(avaliadorId));
-        if (!string.IsNullOrEmpty(filtros.artista)){
+        if (!string.IsNullOrEmpty(filtros.artista))
+        {
             listaObras = listaObras.Where(b => b.Artista.Equals(filtros.artista));
         }
-        if (!string.IsNullOrEmpty(filtros.titulo)){
+        if (!string.IsNullOrEmpty(filtros.titulo))
+        {
             listaObras = listaObras.Where(b => b.Titulo.Equals(filtros.titulo));
         }
-        if (!string.IsNullOrEmpty(filtros.tecnica)){
+        if (!string.IsNullOrEmpty(filtros.tecnica))
+        {
             listaObras = listaObras.Where(b => b.Tecnica.Equals(filtros.tecnica));
         }
-        if (!string.IsNullOrEmpty(filtros.proprietario)){
+        if (!string.IsNullOrEmpty(filtros.proprietario))
+        {
             listaObras = listaObras.Where(b => b.Proprietario.NomeCompleto.Equals(filtros.proprietario));
         }
-        if (filtros.dataCriacao.HasValue){
+        if (filtros.dataCriacao.HasValue)
+        {
             listaObras = listaObras.Where(b => b.DataCriacao.Equals(filtros.dataCriacao));
         }
         return listaObras.OrderByDescending(b => b.ObraId).ToList();
     }
-    public ObraArte? GetObrasId(int? obraId){
+    public ObraArte? GetObrasId(int? obraId)
+    {
         var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
         return obraArte;
     }
-    public List<ObraArte>? GetObras(ObrasArteRepository filtros){
+    public List<ObraArte>? GetObras(ObrasArteRepository filtros)
+    {
         var listaObras = _context.ObraArte.AsQueryable();
-        if (!string.IsNullOrEmpty(filtros.artista)){
+        if (!string.IsNullOrEmpty(filtros.artista))
+        {
             listaObras = listaObras.Where(b => b.Artista.Equals(filtros.artista));
         }
-        if (!string.IsNullOrEmpty(filtros.titulo)){
+        if (!string.IsNullOrEmpty(filtros.titulo))
+        {
             listaObras = listaObras.Where(b => b.Titulo.Equals(filtros.titulo));
         }
-        if (!string.IsNullOrEmpty(filtros.tecnica)){
+        if (!string.IsNullOrEmpty(filtros.tecnica))
+        {
             listaObras = listaObras.Where(b => b.Tecnica.Equals(filtros.tecnica));
         }
-        if (!string.IsNullOrEmpty(filtros.proprietario)){
+        if (!string.IsNullOrEmpty(filtros.proprietario))
+        {
             listaObras = listaObras.Where(b => b.Proprietario.NomeCompleto.Equals(filtros.proprietario));
         }
-        if (filtros.loteId.HasValue){
+        if (filtros.loteId.HasValue)
+        {
             listaObras = listaObras.Where(b => b.LoteId.Equals(filtros.loteId));
         }
-        if (filtros.dataCriacao.HasValue){
+        if (filtros.dataCriacao.HasValue)
+        {
             listaObras = listaObras.Where(b => b.DataCriacao.Equals(filtros.dataCriacao));
         }
         return listaObras.OrderByDescending(b => b.ObraId).ToList();

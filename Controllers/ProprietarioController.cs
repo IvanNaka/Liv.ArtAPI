@@ -63,6 +63,17 @@ namespace LivArt.Controllers
             return Ok(token);
         }
 
+        [HttpPost("cadastroobraproprietario")]
+        public IActionResult CadastroObraProprietario(
+            [FromBody] ObraArte ObraArteForm,
+            [FromServices] ProprietarioObraCadastroRepository ObraArteCadastro
+            )
+        {
+            // Proprietario ObraArte = ObraArteForm.ObraArteCadastro();
+            //ObrasArteRepository.Save(ObraArte);  // nao entendi a lógica por aqui
+            return Ok();
+        }
+
         [Authorize]
         [HttpGet("obras")]
         public IActionResult GetObrasProprietario(
