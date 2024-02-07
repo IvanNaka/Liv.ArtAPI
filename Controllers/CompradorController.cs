@@ -102,9 +102,53 @@ namespace LivArt.Controllers
             return Ok(listaLotes);
         }
 
-
-        
-
-
+        [HttpPost("cadastro/lance")]
+        public IActionResult CadastroLance(
+            [FromBody] LanceCadastroRepostory lanceForm,
+            [FromServices] LanceRepository lanceRepository
+            )
+        {
+            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+            if (compradorId == null){
+                return Unauthorized("Acesso negado.");
+            }
+            Lance? ultimoLance = lanceRepository.GetUltimoLance(lanceForm.LoteId);
+            if (ultimoLance != null & lanceForm.Valor <= ultimoLance.Valor){
+                return BadRequest("Valor de lance deve ser maior que o lance atual");
+            }
+            Lance lance = lanceForm.Cadastro(compradorId);
+            lanceRepository.Save(lance);
+            return Ok(lance);
+        }
+        [Authorize]
+        [HttpGet("maiorlance/{loteId}")]
+        public IActionResult GetMaiorLance(
+            int loteId,
+            [FromServices] LanceRepository lanceRepository
+            )
+        {
+            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+            if (ultimoLance == null){
+                return NotFound("Não foram encontrados lances para este lote.");
+            }
+            return Ok(ultimoLance);
+        }
+        [HttpPost("cadastro/pagamento")]
+        public IActionResult CadastroPagamento(
+            [FromBody] PagamentoCadastroRepostory pagamentoForm,
+            [FromServices] PagamentoRepository pagamentoRepository,
+            [FromServices] CartaoRepository cartaoRepository
+            )
+        {
+            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+            if (compradorId == null){
+                return Unauthorized("Acesso negado.");
+            }
+            Cartao cartao = pagamentoForm.CadastroCartao(compradorId);
+            cartaoRepository.Save(cartao);
+            Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
+            pagamentoRepository.Save(pagamento);
+            return Ok();
+        }
     }
 }

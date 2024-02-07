@@ -17,4 +17,8 @@ public class LanceRepository
         _context.Lance.Add(lance);
         _context.SaveChanges();
     }
+    public Lance? GetUltimoLance(int loteId){
+        var lance = _context.Lance.OrderByDescending(b => b.Valor).SingleOrDefault(b => b.LoteId.Equals(loteId));
+        return lance;
+    }
 }
