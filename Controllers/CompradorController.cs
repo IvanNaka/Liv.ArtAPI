@@ -67,7 +67,7 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista/obras")]
         public IActionResult GetObras(
-            [FromQuery] ObrasArteRepository filtros,
+            [FromQuery] ObrasArteFiltrosRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
@@ -148,7 +148,7 @@ namespace LivArt.Controllers
             cartaoRepository.Save(cartao);
             Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
             pagamentoRepository.Save(pagamento);
-            return Ok();
+            return Ok(pagamento);
         }
         [Authorize]
         [HttpGet("lista/entregas")]

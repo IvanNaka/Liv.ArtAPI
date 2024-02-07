@@ -87,4 +87,53 @@ public class ObrasArteRepository
         }
         return listaObras.OrderByDescending(b => b.ObraId).ToList();
     }
+    public ObraArte UpdateLoteObra(int obraId, int loteId)
+    {
+        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        obraArte.LoteId = loteId;
+        _context.SaveChanges();
+        return obraArte;
+    }
+
+    public ObraArte EditObra(ObrasArtePatchRepository filtros)
+    {
+        var obra = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(filtros.obraId));
+        if (!string.IsNullOrEmpty(filtros.artista))
+        {
+            obra.Artista = filtros.artista;
+        }
+        if (!string.IsNullOrEmpty(filtros.titulo))
+        {
+            obra.Titulo = filtros.titulo;
+        }
+        if (!string.IsNullOrEmpty(filtros.tecnica))
+        {
+            obra.Tecnica = filtros.tecnica;
+        }
+        if (filtros.loteId.HasValue)
+        {
+            obra.LoteId = filtros.loteId;
+        }
+        if (!string.IsNullOrEmpty(filtros.dimensao))
+        {
+            obra.Dimensao = filtros.dimensao;
+        }
+        if (!string.IsNullOrEmpty(filtros.descricao))
+        {
+            obra.Descricao = filtros.descricao;
+        }
+        if (filtros.dataCriacao.HasValue)
+        {
+            obra.DataCriacao = filtros.dataCriacao;
+        }
+        _context.SaveChanges();
+        return obra;
+    }
+    public ObraArte DeleteObra(int obraId)
+    {
+        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        _context.ObraArte.Remove(obraArte);
+        _context.SaveChanges();
+        return obraArte;
+    }
 }

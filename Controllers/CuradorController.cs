@@ -194,7 +194,7 @@ namespace LivArt.Controllers
         {
             Leilao leilao = leilaoForm.Cadastro();
             leilaoRepository.Save(leilao);
-            return Ok();
+            return Ok(leilao);
         }
         [Authorize]
         [HttpGet("lista/leilao")]
@@ -217,6 +217,63 @@ namespace LivArt.Controllers
         {
             Lote lote = loteForm.Cadastro();
             loteRepository.Save(lote);
+            return Ok(lote);
+        }
+
+        [HttpPost("cadastro/lote/obra")]
+        public IActionResult CadastroLoteObra(
+            [FromBody] LoteObraCadastroRepostory loteForm,
+            [FromServices] ObrasArteRepository obraRepository
+            )
+        {
+            ObraArte obra = obraRepository.UpdateLoteObra(loteForm.ObraId, loteForm.LoteId);
+            return Ok(obra);
+        }
+
+        [Authorize]
+        [HttpGet("maiorlance/{loteId}")]
+        public IActionResult GetMaiorLance(
+            int loteId,
+            [FromServices] LanceRepository lanceRepository
+            )
+        {
+            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+            if (ultimoLance == null){
+                return NotFound("Não foram encontrados lances para este lote.");
+            }
+            return Ok(ultimoLance);
+        }
+        [Authorize]
+        [HttpGet("lista/entregas")]
+        public IActionResult GetEntregas(
+            [FromServices] EntregaRepository entregaRepository
+            )
+        {
+        List<Entrega>? listaEntregas = entregaRepository.GetTodasEntregas();
+        if (listaEntregas == null){
+            return NotFound("Não foram encontrados entregas");
+        }
+        return Ok(listaEntregas);
+        }
+
+        [Authorize]
+        [HttpPatch("edicao/obra")]
+        public IActionResult PatchObras(
+            [FromBody] ObrasArtePatchRepository obraArtePatch,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            ObraArte obra = obrasArteRepository.EditObra(obraArtePatch);
+            return Ok(obra);
+        }
+        [Authorize]
+        [HttpPatch("delete/obra/{obraId}")]
+        public IActionResult DeleteObra(
+            int obraId,
+            [FromServices] ObrasArteRepository obrasArteRepository
+            )
+        {
+            ObraArte obra = obrasArteRepository.DeleteObra(obraId);
             return Ok();
         }
     }
