@@ -26,4 +26,21 @@ public class AvaliadorRepository
             }
         return user;
     }
+    public Avaliador? GetAvaliador(int avaliadorId){
+        var avaliador = _context.Avaliador.SingleOrDefault(b => b.AvaliadorId==avaliadorId);
+        return avaliador;
+    }
+    public List<Avaliador>? GetCadastrosPendentes(){
+        var listaCadastrosPendentes = _context.Avaliador.Where(b => b.StatusId=="pendente_avaliador").OrderBy(b => b.AvaliadorId).ToList();
+        return listaCadastrosPendentes;
+    }
+    public Avaliador? UpdateStatusAvaliador(int avaliadorId, string statusId){
+        Avaliador avaliador = this.GetAvaliador(avaliadorId);
+        if (avaliador != null){
+            avaliador.StatusId = statusId;
+            _context.SaveChanges();
+            return avaliador;
+        }
+        return null;
+    }
 }

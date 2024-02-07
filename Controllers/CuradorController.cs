@@ -49,5 +49,86 @@ namespace LivArt.Controllers
             HttpContext.Session.SetString("_curadorUsername", user.Username);
             return Ok(token);
         }
+        
+        [Authorize]
+        [HttpGet("pendentes/avaliador")]
+        public IActionResult GetCadastrosPendetesAvaliador(
+            [FromServices] AvaliadorRepository avaliadorRepository
+            )
+        {
+            List<Avaliador>? listaAvaliadoresPendentes = avaliadorRepository.GetCadastrosPendentes();
+            if (listaAvaliadoresPendentes == null){
+                NotFound("Não foram encontrados cadastros pendentes");
+            }
+            return Ok(listaAvaliadoresPendentes);
+        }
+
+        [Authorize]
+        [HttpGet("pendentes/avaliador/{avaliadorId}")]
+        public IActionResult GetCadastroAvaliador(
+            int avaliadorId,
+            [FromServices] AvaliadorRepository avaliadorRepository
+            )
+        {
+            Avaliador? avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
+            if (avaliador == null){
+                NotFound("Não foi possível encontrar o avaliador desejado");
+            }
+            return Ok(avaliador);
+        }
+        [Authorize]
+        [HttpPatch("pendentes/avaliador/{avaliadorId}/{status}")]
+        public IActionResult UpdateStatusAvaliador(
+            int avaliadorId,
+            string status,
+            [FromServices] AvaliadorRepository avaliadorRepository
+            )
+        {
+            Avaliador? avaliador = avaliadorRepository.UpdateStatusAvaliador(avaliadorId, status);
+            if (avaliador == null){
+                NotFound("Não foi possível encontrar o avaliador desejado");
+            }
+            return Ok(avaliador);
+        }
+        [Authorize]
+        [HttpGet("pendentes/proprietarios")]
+        public IActionResult GetCadastrosPendentesProprietarios(
+            [FromServices] ProprietarioRepository proprietarioRepository
+            )
+        {
+            List<Proprietario>? listaProprietarioPendentes = proprietarioRepository.GetCadastrosPendentes();
+            if (listaProprietarioPendentes == null){
+                NotFound("Não foram encontrados cadastros pendentes");
+            }
+            return Ok(listaProprietarioPendentes);
+        }
+
+        [Authorize]
+        [HttpGet("pendentes/proprietario/{proprietarioId}")]
+        public IActionResult GetCadastroProprietario(
+            int proprietarioId,
+            [FromServices] ProprietarioRepository proprietarioRepository
+            )
+        {
+            Proprietario? proprietario = proprietarioRepository.GetProprietario(proprietarioId);
+            if (proprietario == null){
+                NotFound("Não foi possível encontrar o proprietário desejado");
+            }
+            return Ok(proprietario);
+        }
+        [Authorize]
+        [HttpPatch("pendentes/avaliador/{proprietarioId}/{status}")]
+        public IActionResult UpdateStatusAvaliador(
+            int proprietarioId,
+            string status,
+            [FromServices] ProprietarioRepository proprietarioRepository
+            )
+        {
+            Proprietario? proprietario = proprietarioRepository.UpdateStatusProprietario(proprietarioId, status);
+            if (proprietario == null){
+                NotFound("Não foi possível encontrar o proprietario desejado");
+            }
+            return Ok(proprietario);
+        }
     }
 }

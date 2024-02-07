@@ -21,3 +21,4 @@ obj/Liv.ArtAPI.csproj.nuget.dgspec.json
 obj/Liv.ArtAPI.csproj.nuget.g.props
 obj/project.assets.json
 obj/project.nuget.cache
+obj/Debug/net8.0/Liv.ArtAPI.genruntimeconfig.cache

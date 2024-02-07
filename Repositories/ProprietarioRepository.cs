@@ -29,4 +29,21 @@ public class ProprietarioRepository
         }
         return user;
     }
+    public Proprietario? GetProprietario(int proprietarioId){
+        var proprietario = _context.Proprietario.SingleOrDefault(b => b.ProprietarioId==proprietarioId);
+        return proprietario;
+    }
+    public List<Proprietario>? GetCadastrosPendentes(){
+        var listaCadastrosPendentes = _context.Proprietario.Where(b => b.StatusId=="pendente_proprietario").OrderBy(b => b.ProprietarioId).ToList();
+        return listaCadastrosPendentes;
+    }
+    public Proprietario? UpdateStatusProprietario(int proprietarioId, string statusId){
+        Proprietario proprietario = this.GetProprietario(proprietarioId);
+        if (proprietario != null){
+            proprietario.StatusId = statusId;
+            _context.SaveChanges();
+            return proprietario;
+        }
+        return null;
+    }
 }
