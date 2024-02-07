@@ -12,6 +12,12 @@ builder.Services.AddTransient<ProprietarioRepository>();
 builder.Services.AddTransient<CompradorRepository>();
 builder.Services.AddTransient<EnderecoRepository>();
 builder.Services.AddTransient<LeilaoRepository>();
+builder.Services.AddTransient<CartaoRepository>();
+builder.Services.AddTransient<LanceRepository>();
+builder.Services.AddTransient<LaudoRepository>();
+builder.Services.AddTransient<LoteRepository>();
+builder.Services.AddTransient<ObrasArteRepository>();
+builder.Services.AddTransient<PagamentoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
