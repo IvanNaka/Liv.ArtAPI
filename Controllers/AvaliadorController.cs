@@ -67,7 +67,7 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista_obras")]
         public IActionResult GetObrasAvaliador(
-            [FromQuery] ObrasArteRepository filtros,
+            [FromQuery] ObrasArteFiltrosRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {

@@ -28,7 +28,7 @@ public class ObrasArteRepository
         _context.SaveChanges();
     }
 
-    public List<ObraArte>? GetObrasAvaliador(int? avaliadorId, ObrasArteRepository filtros)
+    public List<ObraArte>? GetObrasAvaliador(int? avaliadorId, ObrasArteFiltrosRepository filtros)
     {
         var listaObras = _context.ObraArte.Where(b => b.AvaliadorId.Equals(avaliadorId));
         if (!string.IsNullOrEmpty(filtros.artista))
