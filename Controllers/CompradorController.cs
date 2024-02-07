@@ -65,7 +65,7 @@ namespace LivArt.Controllers
             return Ok(token);
         }
         [Authorize]
-        [HttpGet("lista_obras")]
+        [HttpGet("lista/obras")]
         public IActionResult GetObras(
             [FromQuery] ObrasArteRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
@@ -78,7 +78,7 @@ namespace LivArt.Controllers
             return Ok(listaObras);
         }
         [Authorize]
-        [HttpGet("lista_leiloes")]
+        [HttpGet("lista/leiloes")]
         public IActionResult GetLeiloes(
             [FromServices] LeilaoRepository leilaoRepository
             )
@@ -90,7 +90,7 @@ namespace LivArt.Controllers
             return Ok(listaLeilao);
         }
         [Authorize]
-        [HttpGet("lista_lote")]
+        [HttpGet("lista/lote")]
         public IActionResult GetLotes(
             [FromServices] LoteRepository loteRepository
             )
@@ -149,6 +149,22 @@ namespace LivArt.Controllers
             Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
             pagamentoRepository.Save(pagamento);
             return Ok();
+        }
+        [Authorize]
+        [HttpGet("lista/entregas")]
+        public IActionResult GetEntregas(
+            [FromServices] EntregaRepository entregaRepository
+            )
+        {
+            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+            if (compradorId == null){
+                return Unauthorized("Acesso negado.");
+            }
+            List<Entrega>? listaEntregas = entregaRepository.GetEntregaComprador((int)compradorId);
+            if (listaEntregas == null){
+                return NotFound("Não foram encontrados entregas");
+            }
+            return Ok(listaEntregas);
         }
     }
 }
