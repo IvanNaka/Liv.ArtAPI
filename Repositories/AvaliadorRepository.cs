@@ -26,6 +26,7 @@ public class AvaliadorRepository
             }
         return user;
     }
+
     public Avaliador? GetAvaliador(int avaliadorId){
         var avaliador = _context.Avaliador.SingleOrDefault(b => b.AvaliadorId==avaliadorId);
         return avaliador;

@@ -76,6 +76,7 @@ namespace LivArt.Controllers
             }
             return Ok(avaliador);
         }
+        
         [Authorize]
         [HttpPatch("pendentes/avaliador/{avaliadorId}/{status}")]
         public IActionResult UpdateStatusAvaliador(
