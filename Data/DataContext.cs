@@ -17,6 +17,7 @@ namespace LivArt
         public DbSet<Pagamento> Pagamento { get; set; } = null!;
         public DbSet<Proprietario> Proprietario { get; set; } = null!;
         public DbSet<Status> Status { get; set; } = null!;
+        public DbSet<Entrega> Entrega { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=IVAN\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
@@ -47,6 +48,11 @@ namespace LivArt
                 .HasOne(p => p.Leilao)
                 .WithMany(c => c.Lote)
                 .HasForeignKey(p => p.LeilaoId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Entrega>()
+                .HasOne(e => e.Pagamento)
+                .WithMany()
+                .HasForeignKey(e => e.PagamentoId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
