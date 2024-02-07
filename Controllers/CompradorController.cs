@@ -89,5 +89,22 @@ namespace LivArt.Controllers
             }
             return Ok(listaLeilao);
         }
+        [Authorize]
+        [HttpGet("lista_lote")]
+        public IActionResult GetLotes(
+            [FromServices] LoteRepository loteRepository
+            )
+        {
+            List<Lote>? listaLotes = loteRepository.GetLotes();
+            if (listaLotes == null){
+                return NotFound("Não foram encontrados lotess disponíveis");
+            }
+            return Ok(listaLotes);
+        }
+
+
+        
+
+
     }
 }
