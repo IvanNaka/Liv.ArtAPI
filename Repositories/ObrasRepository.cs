@@ -21,17 +21,12 @@ public class ObrasArteRepository
         _context = context;
     }
 
-    public void Save(Avaliador avaliador)
+
+    public void Save(ObraArte ObraArte)
     {
-        _context.Avaliador.Add(avaliador);
+        _context.ObraArte.Add(ObraArte);
         _context.SaveChanges();
     }
-
-    //public void Save(ObraArte ObraArte)
-    //{
-    //    _context.ObraArte.Add(ObraArte);
-    //    _context.SaveChanges();
-    //}
 
     public List<ObraArte>? GetObrasAvaliador(int? avaliadorId, ObrasArteRepository filtros)
     {
