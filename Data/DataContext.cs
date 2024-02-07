@@ -43,6 +43,11 @@ namespace LivArt
                 .WithMany(c => c.ObraArte)
                 .HasForeignKey(p => p.LoteId)
                 .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Lote>()
+                .HasOne(p => p.Leilao)
+                .WithMany(c => c.Lote)
+                .HasForeignKey(p => p.LeilaoId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

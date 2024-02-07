@@ -4,6 +4,7 @@ using LivArt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Liv.ArtAPI.Migrations
 {
     [DbContext(typeof(LivArtContext))]
-    partial class LivArtContextModelSnapshot : ModelSnapshot
+    [Migration("20240207010405_RelacoesLeilaoLoteObra")]
+    partial class RelacoesLeilaoLoteObra
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,13 +280,13 @@ namespace Liv.ArtAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LanceId"));
 
-                    b.Property<int>("CompradorId")
+                    b.Property<int?>("CompradorId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LoteId")
+                    b.Property<int>("LeilaoId")
                         .HasColumnType("int");
 
                     b.Property<double>("Valor")
@@ -293,7 +296,7 @@ namespace Liv.ArtAPI.Migrations
 
                     b.HasIndex("CompradorId");
 
-                    b.HasIndex("LoteId");
+                    b.HasIndex("LeilaoId");
 
                     b.ToTable("Lance");
                 });
@@ -380,7 +383,7 @@ namespace Liv.ArtAPI.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("LeilaoId")
+                    b.Property<int?>("LeilaoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -467,9 +470,6 @@ namespace Liv.ArtAPI.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LoteId")
-                        .HasColumnType("int");
-
                     b.Property<double>("ValorAvaliador")
                         .HasColumnType("float");
 
@@ -484,8 +484,6 @@ namespace Liv.ArtAPI.Migrations
                     b.HasIndex("CartaoId");
 
                     b.HasIndex("CompradorId");
-
-                    b.HasIndex("LoteId");
 
                     b.ToTable("Pagamento");
                 });
@@ -608,19 +606,17 @@ namespace Liv.ArtAPI.Migrations
                 {
                     b.HasOne("Comprador", "Comprador")
                         .WithMany()
-                        .HasForeignKey("CompradorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompradorId");
 
-                    b.HasOne("Lote", "Lote")
+                    b.HasOne("Leilao", "Leilao")
                         .WithMany()
-                        .HasForeignKey("LoteId")
+                        .HasForeignKey("LeilaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Comprador");
 
-                    b.Navigation("Lote");
+                    b.Navigation("Leilao");
                 });
 
             modelBuilder.Entity("Laudo", b =>
@@ -647,8 +643,7 @@ namespace Liv.ArtAPI.Migrations
                     b.HasOne("Leilao", "Leilao")
                         .WithMany("Lote")
                         .HasForeignKey("LeilaoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Leilao");
                 });
@@ -691,17 +686,9 @@ namespace Liv.ArtAPI.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Lote", "Lote")
-                        .WithMany()
-                        .HasForeignKey("LoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Cartao");
 
                     b.Navigation("Comprador");
-
-                    b.Navigation("Lote");
                 });
 
             modelBuilder.Entity("Proprietario", b =>

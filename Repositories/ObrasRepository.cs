@@ -15,6 +15,7 @@ public class ObrasArteRepository
     public DateOnly? dataCriacao;
     public string? tecnica;
     public string? proprietario;
+    public int? loteId;
     public ObrasArteRepository(LivArtContext context){
         _context = context;
     }
@@ -59,6 +60,9 @@ public class ObrasArteRepository
         }
         if (!string.IsNullOrEmpty(filtros.proprietario)){
             listaObras = listaObras.Where(b => b.Proprietario.NomeCompleto.Equals(filtros.proprietario));
+        }
+        if (filtros.loteId.HasValue){
+            listaObras = listaObras.Where(b => b.LoteId.Equals(filtros.loteId));
         }
         if (filtros.dataCriacao.HasValue){
             listaObras = listaObras.Where(b => b.DataCriacao.Equals(filtros.dataCriacao));

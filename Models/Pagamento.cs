@@ -18,4 +18,8 @@ public class Pagamento
     public int CartaoId { get; set; }
     public Cartao Cartao { get; set; }
 
+    [ForeignKey("Lote")]
+    public int LoteId { get; set; }
+    public Lote Lote { get; set; }
+
 }

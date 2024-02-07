@@ -10,11 +10,11 @@ public class Lance
     public DateTime Data { get; set; }
 
     [ForeignKey("Comprador")]
-    public int? CompradorId { get; set; }
-    public Comprador? Comprador { get; set; }
+    public int CompradorId { get; set; }
+    public Comprador Comprador { get; set; }
 
-    [ForeignKey("Leilao")]
-    public int LeilaoId { get; set; }
-    public Leilao? Leilao { get; set; }
+    [ForeignKey("Lote")]
+    public int LoteId { get; set; }
+    public Lote Lote { get; set; }
 
 }
