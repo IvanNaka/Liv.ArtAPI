@@ -12,8 +12,5 @@ public class Leilao
 
     [StringLength(256)]
     public string? Descricao { get; set; }
-
-    [ForeignKey("Lote")]
-    public int? LoteId { get; set; }
-    public Lote? Lote { get; set; }
+    public ICollection<Lote>? Lote { get; set; }
 }

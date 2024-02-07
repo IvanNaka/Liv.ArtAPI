@@ -10,6 +10,10 @@ public class Lote
 
     [StringLength(256)]
     public string Descricao { get; set; }
+    
+    [ForeignKey("Leilao")]
+    public int? LeilaoId { get; set; }
+    public Leilao? Leilao { get; set; }
 
     public ICollection<ObraArte>? ObraArte { get; set; }
 }
