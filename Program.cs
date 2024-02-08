@@ -19,6 +19,7 @@ builder.Services.AddTransient<LoteRepository>();
 builder.Services.AddTransient<ObrasArteRepository>();
 builder.Services.AddTransient<PagamentoRepository>();
 builder.Services.AddTransient<EntregaRepository>();
+builder.Services.AddTransient<CuradorRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
