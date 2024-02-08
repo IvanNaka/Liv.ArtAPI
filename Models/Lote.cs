@@ -15,5 +15,5 @@ public class Lote
     public int LeilaoId { get; set; }
     public Leilao Leilao { get; set; }
 
-    public ICollection<ObraArte>? ObraArte { get; set; }
+    public virtual ICollection<ObraArte>? ObraArte { get; set; }
 }
