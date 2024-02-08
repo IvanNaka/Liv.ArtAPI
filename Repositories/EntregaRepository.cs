@@ -21,5 +21,8 @@ public class EntregaRepository
         var entrega = _context.Entrega.Where(b => b.CompradorId==compradorId).OrderByDescending(b => b.EntregaId).ToList();
         return entrega;
     }
-
+    public List<Entrega>? GetTodasEntregas(){
+        var entrega = _context.Entrega.OrderByDescending(b => b.EntregaId).ToList();
+        return entrega;
+    }
 }
