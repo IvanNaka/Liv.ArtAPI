@@ -10,12 +10,6 @@ public class ObrasArteRepository
 {
     private readonly LivArtContext _context;
 
-    public string? artista;
-    public string? titulo;
-    public DateOnly? dataCriacao;
-    public string? tecnica;
-    public string? proprietario;
-    public int? loteId;
     public ObrasArteRepository(LivArtContext context)
     {
         _context = context;
@@ -159,6 +153,13 @@ public class ObrasArteRepository
     {
         var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
         _context.ObraArte.Remove(obraArte);
+        _context.SaveChanges();
+        return obraArte;
+    }
+    public ObraArte? SetAvaliador(int obraId, int avaliadorId)
+    {
+        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        obraArte.AvaliadorId = avaliadorId;
         _context.SaveChanges();
         return obraArte;
     }

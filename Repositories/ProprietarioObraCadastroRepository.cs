@@ -12,17 +12,19 @@ namespace Liv.ArtAPI.Repositories
         public DateOnly DataCriacao { get; set; }
         public string Dimensao { get; set; }
         public string Tecnica { get; set; }
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }
 
 
-        public ObraArte ObraArteCadastro()
+        public ObraArte ObraArteCadastro(int ProprietarioId)
         {
             ObraArte obraarteObj = new ObraArte();
-            obraarteObj.Artista = Artista;
+            obraarteObj.Artista = this.Artista;
+            obraarteObj.Titulo = this.Titulo;
             obraarteObj.DataCriacao = this.DataCriacao;
             obraarteObj.Dimensao = this.Dimensao;
             obraarteObj.Tecnica = this.Tecnica;
             obraarteObj.Descricao = this.Descricao;
+            obraarteObj.ProprietarioId = ProprietarioId;
             return obraarteObj;
         }
     }

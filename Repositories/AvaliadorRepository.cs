@@ -32,6 +32,10 @@ public class AvaliadorRepository
         var avaliador = _context.Avaliador.SingleOrDefault(b => b.AvaliadorId==avaliadorId);
         return avaliador;
     }
+    public List<Avaliador>? GetAvaliadores(){
+        var avaliador = _context.Avaliador.AsQueryable().ToList();
+        return avaliador;
+    }
     public List<Avaliador>? GetCadastrosPendentes(){
         var listaCadastrosPendentes = _context.Avaliador.Where(b => b.StatusId=="pendente_avaliador").OrderBy(b => b.AvaliadorId).ToList();
         return listaCadastrosPendentes;

@@ -79,11 +79,23 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista_obras")]
         public IActionResult GetObrasAvaliador(
-            [FromQuery] ObrasArteFiltrosRepository filtros,
+            [FromQuery] string? artista, 
+            [FromQuery] string? titulo,
+            [FromQuery] DateOnly? dataCriacao,
+            [FromQuery] string? tecnica,
+            [FromQuery] string? proprietario,
+            [FromQuery] int? loteId,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
             try{
+                ObrasArteFiltrosRepository filtros = new ObrasArteFiltrosRepository();
+                filtros.artista = artista;
+                filtros.titulo = titulo;
+                filtros.dataCriacao = dataCriacao;
+                filtros.tecnica = tecnica;
+                filtros.proprietario = proprietario;
+                filtros.loteId = loteId;
                 int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
                 if (avaliadorId == null){
                     return Unauthorized("Acesso negado.");

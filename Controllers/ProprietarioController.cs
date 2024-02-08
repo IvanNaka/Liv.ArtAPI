@@ -21,7 +21,7 @@ namespace LivArt.Controllers
             _config = config;
         }
 
-        [HttpPost("cadastroproprietario")]
+        [HttpPost("cadastro")]
         public IActionResult CadastroProprietario(
             [FromBody] ProprietarioCadastroRepository proprietarioForm,
             [FromServices] ProprietarioRepository proprietarioRepository
@@ -31,7 +31,7 @@ namespace LivArt.Controllers
             {
                 Proprietario proprietario = proprietarioForm.ProprietarioCadastro();
                 proprietarioRepository.Save(proprietario);
-                return Ok();
+                return Ok(proprietario);
             }
             catch (Exception e)
             {
@@ -87,9 +87,13 @@ namespace LivArt.Controllers
         {
             try
             {
-                ObraArte ObraArte = ObraArteForm.ObraArteCadastro();
-                ObrasArte.Save(ObraArte);  // nao entendi a lógica por aqui
-                return Ok();
+                int? proprietarioId = HttpContext.Session.GetInt32("_proprietarioId");
+                if (proprietarioId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                ObraArte ObraArte = ObraArteForm.ObraArteCadastro((int)proprietarioId);
+                ObrasArte.Save(ObraArte);  
+                return Ok(ObraArte);
             }
             catch (Exception e)
             {
@@ -100,7 +104,12 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("obras")]
         public IActionResult GetObrasProprietario(
-            [FromQuery] ObrasArteFiltrosRepository filtros,
+            [FromQuery] string? artista, 
+            [FromQuery] string? titulo,
+            [FromQuery] DateOnly? dataCriacao,
+            [FromQuery] string? tecnica,
+            [FromQuery] string? proprietario,
+            [FromQuery] int? loteId,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
@@ -111,6 +120,13 @@ namespace LivArt.Controllers
                 {
                     return Unauthorized("Acesso negado.");
                 }
+                ObrasArteFiltrosRepository filtros = new ObrasArteFiltrosRepository();
+                filtros.artista = artista;
+                filtros.titulo = titulo;
+                filtros.dataCriacao = dataCriacao;
+                filtros.tecnica = tecnica;
+                filtros.proprietario = proprietario;
+                filtros.loteId = loteId;
                 List<ObraArte> listaObras = obrasArteRepository.GetObrasProprietario(proprietarioId, filtros);
                 return Ok(listaObras);
             }
@@ -125,7 +141,6 @@ namespace LivArt.Controllers
         [HttpGet("obras/laudo/{laudoId}")]
         public IActionResult GetLaudo(
             int laudoId,
-            [FromQuery] LaudoRepository filtros,
             [FromServices] LaudoRepository laudoRepository
             )
         {
@@ -148,8 +163,31 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("avaliadores")]
         public IActionResult GetAvaliador(
-            int avaliadorId,
             [FromServices] AvaliadorRepository avaliadorRepository
+        )
+        {
+            try
+            {
+                List<Avaliador> avaliador = avaliadorRepository.GetAvaliadores();
+                if (avaliador == null)
+                {
+                    return NotFound("Avaliador não encontrado");
+                }
+                return Ok(avaliador);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer avaliador.");
+            }
+
+        }
+        [Authorize]
+        [HttpPost("avaliadores/{obraId}/{avaliadorId}")]
+        public IActionResult SetAvaliadorObra(
+            int obraId,
+            int avaliadorId,
+            [FromServices] AvaliadorRepository avaliadorRepository,
+            [FromServices] ObrasArteRepository obraRepository
         )
         {
             try
@@ -159,7 +197,8 @@ namespace LivArt.Controllers
                 {
                     return NotFound("Avaliador não encontrado");
                 }
-                return Ok(avaliador);
+                ObraArte obra = obraRepository.SetAvaliador(obraId, avaliadorId);
+                return Ok(obra);
             }
             catch (Exception e)
             {
@@ -249,7 +288,7 @@ namespace LivArt.Controllers
             {
                 Entrega entrega = EntregaForm.Cadastro();
                 entregaRepository.Save(entrega);
-                return Ok();
+                return Ok(entrega);
             }
             catch (Exception e)
             {

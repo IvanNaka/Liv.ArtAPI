@@ -76,11 +76,23 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista/obras")]
         public IActionResult GetObras(
-            [FromQuery] ObrasArteFiltrosRepository filtros,
+            [FromQuery] string? artista, 
+            [FromQuery] string? titulo,
+            [FromQuery] DateOnly? dataCriacao,
+            [FromQuery] string? tecnica,
+            [FromQuery] string? proprietario,
+            [FromQuery] int? loteId,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
             try{
+                ObrasArteFiltrosRepository filtros = new ObrasArteFiltrosRepository();
+                filtros.artista = artista;
+                filtros.titulo = titulo;
+                filtros.dataCriacao = dataCriacao;
+                filtros.tecnica = tecnica;
+                filtros.proprietario = proprietario;
+                filtros.loteId = loteId;
                 List<ObraArte>? listaObras = obrasArteRepository.GetObras(filtros);
                 if (listaObras == null){
                     return NotFound("Não foram encontradas obras");

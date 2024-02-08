@@ -163,11 +163,23 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista/obras")]
         public IActionResult GetObras(
-            [FromQuery] ObrasArteFiltrosRepository filtros,
+            [FromQuery] string? artista, 
+            [FromQuery] string? titulo,
+            [FromQuery] DateOnly? dataCriacao,
+            [FromQuery] string? tecnica,
+            [FromQuery] string? proprietario,
+            [FromQuery] int? loteId,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
             try{
+                ObrasArteFiltrosRepository filtros = new ObrasArteFiltrosRepository();
+                filtros.artista = artista;
+                filtros.titulo = titulo;
+                filtros.dataCriacao = dataCriacao;
+                filtros.tecnica = tecnica;
+                filtros.proprietario = proprietario;
+                filtros.loteId = loteId;
                 List<ObraArte> listaObras = obrasArteRepository.GetObras(filtros);
                 if (listaObras == null){
                     return NotFound("Não foram encontradas obras disponíveis");
@@ -198,11 +210,19 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("lista/laudo")]
         public IActionResult GetLaudosDisponiveis(
-            [FromQuery] LaudosFiltroRepository filtros,
+            [FromQuery] string? status, 
+            [FromQuery] string? autenticidade,
+            [FromQuery] double? valorEstimado,
+            [FromQuery] int? obraId,
             [FromServices] LaudoRepository laudoRepository
             )
         {
             try{
+                LaudosFiltroRepository filtros = new LaudosFiltroRepository();
+                filtros.Status = status;
+                filtros.Autenticidade = autenticidade;
+                filtros.ValorEstimado = valorEstimado;
+                filtros.ObraId = obraId;
                 List<Laudo> listaLaudos = laudoRepository.GetLaudos(filtros);
                 if (listaLaudos == null){
                     return NotFound("Não foram encontrados laudos disponíveis");
