@@ -77,13 +77,26 @@ namespace LivArt.Controllers
         [Authorize]
         [HttpGet("obras")]
         public IActionResult GetObrasProprietario(
-            [FromQuery] ObrasArteRepository filtros,
+            [FromQuery] ObrasArteFiltrosRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            return Ok();
-
+            try
+            {
+                int? proprietarioId = HttpContext.Session.GetInt32("_proprietarioId");
+                if (proprietarioId == null)
+                {
+                    return Unauthorized("Acesso negado.");
+                }
+                List<ObraArte> listaObras = obrasArteRepository.GetObrasProprietario(proprietarioId, filtros);
+                return Ok(listaObras);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer obras");
+            }
         }
+
 
         [Authorize]
         [HttpGet("obras/laudo/{laudoId}")]

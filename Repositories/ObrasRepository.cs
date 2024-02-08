@@ -53,6 +53,32 @@ public class ObrasArteRepository
         }
         return listaObras.OrderByDescending(b => b.ObraId).ToList();
     }
+
+    public List<ObraArte>? GetObrasProprietario(int? proprietarioId, ObrasArteFiltrosRepository filtros)
+    {
+        var listaObras = _context.ObraArte.Where(b => b.ProprietarioId.Equals(proprietarioId));
+        if (!string.IsNullOrEmpty(filtros.artista))
+        {
+            listaObras = listaObras.Where(b => b.Artista.Equals(filtros.artista));
+        }
+        if (!string.IsNullOrEmpty(filtros.titulo))
+        {
+            listaObras = listaObras.Where(b => b.Titulo.Equals(filtros.titulo));
+        }
+        if (!string.IsNullOrEmpty(filtros.tecnica))
+        {
+            listaObras = listaObras.Where(b => b.Tecnica.Equals(filtros.tecnica));
+        }
+        if (!string.IsNullOrEmpty(filtros.proprietario))
+        {
+            listaObras = listaObras.Where(b => b.Proprietario.NomeCompleto.Equals(filtros.proprietario));
+        }
+        if (filtros.dataCriacao.HasValue)
+        {
+            listaObras = listaObras.Where(b => b.DataCriacao.Equals(filtros.dataCriacao));
+        }
+        return listaObras.OrderByDescending(b => b.ObraId).ToList();
+    }
     public ObraArte? GetObrasId(int? obraId)
     {
         var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
