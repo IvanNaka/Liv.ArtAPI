@@ -55,6 +55,12 @@ namespace LivArt.Controllers
                 {
                     return NotFound("Usuário e/ou senha incorreto!");
                 }
+                if(user.StatusId == "pendente_proprietario"){
+                    return Unauthorized("Usuário aguardando confirmação da Curadoria");
+                }
+                if(user.StatusId == "reprovado_proprietario"){
+                    return Unauthorized("Usuário reprovado pela Curadoria");
+                }
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
                 var claims = new[]
