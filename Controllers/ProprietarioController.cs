@@ -1,6 +1,7 @@
 using Liv.ArtAPI.Repositories;
 using LivArt;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -80,12 +81,106 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            //string Username = proprietarioLogin.Username;
-            //string senha = proprietarioLogin.Senha;
-            //var user = proprietarioRepository.Login(Username, senha);
-            //return Ok(user);
             return Ok();
 
         }
+
+        [Authorize]
+        [HttpGet("obras/laudo/{laudoId}")]
+        public IActionResult GetLaudo(
+            int laudoId,
+            [FromQuery] LaudoRepository filtros,
+            [FromServices] LaudoRepository laudoRepository
+            )
+        {
+            Laudo? laudo = laudoRepository.GetLaudo(laudoId);
+            if (laudo == null)
+            {
+                return NotFound("Não foi possível encontrar o laudo desta obra.");
+            }
+            return Ok(laudo);
+        }
+
+
+        [Authorize]
+        [HttpGet("avaliadores")]
+        public IActionResult GetAvaliador(
+            int avaliadorId,
+            [FromServices] AvaliadorRepository avaliadorRepository
+        )
+        {
+            Avaliador avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
+            if (avaliador == null)
+            {
+                return NotFound("Avaliador não encontrado");
+            }
+            return Ok(avaliador);
+        }
+
+        [Authorize]
+        [HttpGet("leilao/lances/{loteId}")]
+        public IActionResult GetMaiorLance(
+            int loteId,
+            [FromServices] LanceRepository lanceRepository
+        )
+        {
+            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+            if (ultimoLance == null)
+            {
+                return NotFound("Não foram encontrados lances para este lote.");
+            }
+            return Ok(ultimoLance);
+        }
+
+        [Authorize]
+        [HttpGet("leilao/{leilaoId}")]
+        public IActionResult FinalizarLeilao(
+            int leilaoId,
+            [FromServices] LeilaoRepository leilaoRepository
+        )
+        {
+            Leilao? leilao = leilaoRepository.GetLeilaoId(leilaoId);
+            if (leilao == null)
+            {
+                return NotFound("Leilão não encontrado");
+            }
+            if (leilao.DataFim <= DateTime.Now)
+            {
+                return NotFound("O leilão pesquisado já foi encerrado.");
+            }
+
+            return Ok(leilaoId);
+        }
+
+        [Authorize]
+        [HttpGet("leilao/entrega")]
+        public IActionResult GetEntrega(
+        int compradorId,
+        [FromServices] EntregaRepository entregaRepository
+        )
+        {
+            var entregas = entregaRepository.GetEntregaComprador(compradorId);
+            if (entregas == null || entregas.Count == 0)
+            {
+                return NotFound("Não foram encontradas entregas");
+            }
+            return Ok(entregas);
+        }
+
+        [HttpPost("entrega/cadastro")]
+        public IActionResult CadastroObraProprietario(
+        [FromBody] EntregaCadastroRepository EntregaForm,
+        [FromServices] EntregaRepository entregaRepository
+        )
+        {
+            Entrega entrega = EntregaForm.Cadastro();
+            entregaRepository.Save(entrega);
+            return Ok();
+        }
+
+
+
     }
 }
+
+
