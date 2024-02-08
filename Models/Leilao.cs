@@ -12,5 +12,5 @@ public class Leilao
 
     [StringLength(256)]
     public string? Descricao { get; set; }
-    public ICollection<Lote>? Lote { get; set; }
+    public virtual ICollection<Lote>? Lote { get; set; }
 }

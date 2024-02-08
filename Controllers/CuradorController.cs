@@ -142,7 +142,7 @@ namespace LivArt.Controllers
             }
         }
         [Authorize]
-        [HttpPatch("pendentes/avaliador/{proprietarioId}/{status}")]
+        [HttpPatch("pendentes/proprietario/{proprietarioId}/{status}")]
         public IActionResult UpdateStatusAvaliador(
             int proprietarioId,
             string status,

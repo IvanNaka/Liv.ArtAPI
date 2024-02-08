@@ -21,7 +21,7 @@ public class Comprador
     [ForeignKey("Endereco")]
     public int? EnderecoId { get; set; }
     public Endereco? Endereco { get; set; }
-    public ICollection<Pagamento>? Pagamento { get; set; }
+    public virtual ICollection<Pagamento>? Pagamento { get; set; }
 
     [StringLength(128)]
     public string Username { get; set; }

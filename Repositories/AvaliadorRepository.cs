@@ -1,4 +1,5 @@
 using LivArt;
+using Microsoft.EntityFrameworkCore;
 
 public interface IAvaliadorRepository
 {

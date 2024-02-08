@@ -20,7 +20,7 @@ namespace LivArt
         public DbSet<Entrega> Entrega { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-VKHEAAQ\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(@"Server=Ivan\SQLEXPRESS;Database=LivArt;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
