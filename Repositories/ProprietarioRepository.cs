@@ -22,7 +22,7 @@ public class ProprietarioRepository
     }
     public Proprietario? Login(string Username, string Senha)
     {
-        var user = _context.Proprietario.SingleOrDefault(x => x.Username == Username && x.Senha == Senha);
+        var user = _context.Proprietario.First(x => x.Username == Username && x.Senha == Senha);
         if (user == null)
         {
             return null;
@@ -30,7 +30,7 @@ public class ProprietarioRepository
         return user;
     }
     public Proprietario? GetProprietario(int proprietarioId){
-        var proprietario = _context.Proprietario.SingleOrDefault(b => b.ProprietarioId==proprietarioId);
+        var proprietario = _context.Proprietario.First(b => b.ProprietarioId==proprietarioId);
         return proprietario;
     }
     public List<Proprietario>? GetCadastrosPendentes(){

@@ -20,7 +20,7 @@ public class AvaliadorRepository
         _context.SaveChanges();
     }
     public Avaliador? Login(string Username, string Senha){
-        var user = _context.Avaliador.SingleOrDefault(x => x.Username == Username && x.Senha == Senha);
+        var user = _context.Avaliador.First(x => x.Username == Username && x.Senha == Senha);
         if (user == null)
             {
                 return null;
@@ -29,7 +29,7 @@ public class AvaliadorRepository
     }
 
     public Avaliador? GetAvaliador(int avaliadorId){
-        var avaliador = _context.Avaliador.SingleOrDefault(b => b.AvaliadorId==avaliadorId);
+        var avaliador = _context.Avaliador.First(b => b.AvaliadorId==avaliadorId);
         return avaliador;
     }
     public List<Avaliador>? GetAvaliadores(){

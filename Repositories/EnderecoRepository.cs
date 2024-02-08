@@ -18,4 +18,10 @@ public class EnderecoRepository
         _context.SaveChanges();
         return endereco;
     }
+
+    public Endereco GetEnderecoComprador(int compradorId){
+        var comprador = _context.Comprador.First(b=>b.CompradorId==compradorId);
+        var endereco = _context.Endereco.First(b=>b.EnderecoId==comprador.EnderecoId);
+        return endereco;
+    }
 }

@@ -13,7 +13,7 @@ public class LoteRepository
         _context.SaveChanges();
     }
     public Lote? GetLoteId(int? loteId){
-        var lote = _context.Lote.SingleOrDefault(b => b.LoteId.Equals(loteId));
+        var lote = _context.Lote.First(b => b.LoteId.Equals(loteId));
         return lote;
     }
     public List<Lote>? GetLotes(){

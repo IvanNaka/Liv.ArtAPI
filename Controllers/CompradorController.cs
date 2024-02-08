@@ -149,8 +149,9 @@ namespace LivArt.Controllers
                     return Unauthorized("Acesso negado.");
                 }
                 Lance? ultimoLance = lanceRepository.GetUltimoLance(lanceForm.LoteId);
-                if (ultimoLance != null & lanceForm.Valor <= ultimoLance.Valor){
-                    return BadRequest("Valor de lance deve ser maior que o lance atual");
+                if (ultimoLance != null){
+                    if (lanceForm.Valor <= ultimoLance.Valor)
+                        return BadRequest("Valor de lance deve ser maior que o lance atual");
                 }
                 Lance lance = lanceForm.Cadastro(compradorId);
                 lanceRepository.Save(lance);
@@ -188,7 +189,7 @@ namespace LivArt.Controllers
                 if (compradorId == null){
                     return Unauthorized("Acesso negado.");
                 }
-                Cartao cartao = pagamentoForm.CadastroCartao(compradorId);
+                Cartao cartao = pagamentoForm.CadastroCartao((int)compradorId);
                 cartaoRepository.Save(cartao);
                 Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
                 pagamentoRepository.Save(pagamento);

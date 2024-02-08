@@ -248,7 +248,7 @@ namespace LivArt.Controllers
                     return NotFound("O leilão pesquisado já foi encerrado.");
                 }
 
-                return Ok(leilaoId);
+                return Ok(leilao);
             }
             catch (Exception e)
             {
@@ -257,24 +257,24 @@ namespace LivArt.Controllers
         }
 
         [Authorize]
-        [HttpGet("leilao/entrega")]
+        [HttpGet("leilao/entrega/{compradorId}")]
         public IActionResult GetEntrega(
         int compradorId,
-        [FromServices] EntregaRepository entregaRepository
+        [FromServices] EnderecoRepository enderecoRepository
         )
         {
             try
             {
-                var entregas = entregaRepository.GetEntregaComprador(compradorId);
-                if (entregas == null || entregas.Count == 0)
+                var endereco = enderecoRepository.GetEnderecoComprador(compradorId);
+                if (endereco == null)
                 {
-                    return NotFound("Não foram encontradas entregas");
+                    return NotFound("Não foi encontrado endereço para entrega");
                 }
-                return Ok(entregas);
+                return Ok(endereco);
             }
             catch (Exception e)
             {
-                return BadRequest("Erro ao trazer entregas.");
+                return BadRequest("Erro ao trazer endereços.");
             }
         }
 

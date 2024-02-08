@@ -18,7 +18,7 @@ public class LaudoRepository
         _context.SaveChanges();
     }
     public Laudo? GetLaudo(int laudoId){
-        var laudo = _context.Laudo.SingleOrDefault(b => b.LaudoId==laudoId);
+        var laudo = _context.Laudo.First(b => b.LaudoId==laudoId);
         return laudo;
     }
     public List<Laudo>? GetLaudos(LaudosFiltroRepository filtros){

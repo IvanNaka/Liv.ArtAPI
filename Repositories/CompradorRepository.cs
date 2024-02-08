@@ -22,7 +22,7 @@ public class CompradorRepository
     }
     public Comprador? Login(string Username, string Senha)
     {
-        var user = _context.Comprador.SingleOrDefault(x => x.Username == Username && x.Senha == Senha);
+        var user = _context.Comprador.First(x => x.Username == Username && x.Senha == Senha);
         if (user == null)
         {
             return null;

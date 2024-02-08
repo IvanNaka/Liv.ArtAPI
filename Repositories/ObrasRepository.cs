@@ -75,7 +75,7 @@ public class ObrasArteRepository
     }
     public ObraArte? GetObrasId(int? obraId)
     {
-        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        var obraArte = _context.ObraArte.First(b => b.ObraId.Equals(obraId));
         return obraArte;
     }
     public List<ObraArte>? GetObras(ObrasArteFiltrosRepository filtros)
@@ -109,7 +109,7 @@ public class ObrasArteRepository
     }
     public ObraArte UpdateLoteObra(int obraId, int loteId)
     {
-        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        var obraArte = _context.ObraArte.First(b => b.ObraId.Equals(obraId));
         obraArte.LoteId = loteId;
         _context.SaveChanges();
         return obraArte;
@@ -117,7 +117,7 @@ public class ObrasArteRepository
 
     public ObraArte EditObra(ObrasArtePatchRepository filtros)
     {
-        var obra = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(filtros.obraId));
+        var obra = _context.ObraArte.First(b => b.ObraId.Equals(filtros.obraId));
         if (!string.IsNullOrEmpty(filtros.artista))
         {
             obra.Artista = filtros.artista;
@@ -151,14 +151,14 @@ public class ObrasArteRepository
     }
     public ObraArte DeleteObra(int obraId)
     {
-        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        var obraArte = _context.ObraArte.First(b => b.ObraId.Equals(obraId));
         _context.ObraArte.Remove(obraArte);
         _context.SaveChanges();
         return obraArte;
     }
     public ObraArte? SetAvaliador(int obraId, int avaliadorId)
     {
-        var obraArte = _context.ObraArte.SingleOrDefault(b => b.ObraId.Equals(obraId));
+        var obraArte = _context.ObraArte.First(b => b.ObraId.Equals(obraId));
         obraArte.AvaliadorId = avaliadorId;
         _context.SaveChanges();
         return obraArte;

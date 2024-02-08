@@ -9,16 +9,15 @@ public class PagamentoCadastroRepostory
     public int LoteId { get; set; }
     public string NomeEscritoCartao { get; set; }
     public string ValidadeCartao { get; set; }
-    public string PrimeirosCincoCartao { get; set; }
-
-    public string HashCartao { get; set; }
-    public Cartao CadastroCartao(int? compradorId)
+    public string NumerosCartao { get; set; }
+    public Cartao CadastroCartao(int compradorId)
     {
         Cartao cartaoObj = new Cartao();
         cartaoObj.NomeEscrito = this.NomeEscritoCartao;
         cartaoObj.Validade = this.ValidadeCartao;
-        cartaoObj.PrimeirosCinco = this.PrimeirosCincoCartao;
-        cartaoObj.Hash = HashConstructor.CreateHash(this.HashCartao);
+        cartaoObj.CompradorId = compradorId;
+        cartaoObj.PrimeirosCinco = this.NumerosCartao.Substring(0,5);
+        cartaoObj.Hash = HashConstructor.CreateHash(this.NumerosCartao);
         return cartaoObj;
     }
     public Pagamento CadastroPagamento(int? compradorId, int cartaoId)

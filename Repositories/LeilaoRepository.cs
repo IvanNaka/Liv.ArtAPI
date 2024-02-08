@@ -13,7 +13,7 @@ public class LeilaoRepository
         _context.SaveChanges();
     }
     public Leilao? GetLeilaoId(int? LeilaoId){
-        var leilao = _context.Leilao.SingleOrDefault(b => b.LeilaoId.Equals(LeilaoId));
+        var leilao = _context.Leilao.First(b => b.LeilaoId.Equals(LeilaoId));
         return leilao;
     }
     public List<Leilao>? GetLeiloes(){

@@ -326,7 +326,7 @@ namespace LivArt.Controllers
                 }
                 return Ok(ultimoLance);
             }
-            catch{
+            catch(Exception e){
                 return BadRequest("Erro ao trazer lance do lote");
             }
         }
@@ -364,7 +364,7 @@ namespace LivArt.Controllers
 
         }
         [Authorize]
-        [HttpPatch("delete/obra/{obraId}")]
+        [HttpDelete("delete/obra/{obraId}")]
         public IActionResult DeleteObra(
             int obraId,
             [FromServices] ObrasArteRepository obrasArteRepository
