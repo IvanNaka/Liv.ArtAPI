@@ -113,11 +113,16 @@ namespace LivArt.Controllers
             [FromServices] LoteRepository loteRepository
             )
         {
-            List<Lote>? listaLotes = loteRepository.GetLotes();
-            if (listaLotes == null){
-                return NotFound("Não foram encontrados lotess disponíveis");
+            try{
+                List<Lote>? listaLotes = loteRepository.GetLotes();
+                if (listaLotes == null){
+                    return NotFound("Não foram encontrados lotes disponíveis");
+                }
+                return Ok(listaLotes);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer lotes disponíveis");
             }
-            return Ok(listaLotes);
+
         }
 
         [HttpPost("cadastro/lance")]
@@ -126,17 +131,21 @@ namespace LivArt.Controllers
             [FromServices] LanceRepository lanceRepository
             )
         {
-            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
-            if (compradorId == null){
-                return Unauthorized("Acesso negado.");
+            try{
+                int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+                if (compradorId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                Lance? ultimoLance = lanceRepository.GetUltimoLance(lanceForm.LoteId);
+                if (ultimoLance != null & lanceForm.Valor <= ultimoLance.Valor){
+                    return BadRequest("Valor de lance deve ser maior que o lance atual");
+                }
+                Lance lance = lanceForm.Cadastro(compradorId);
+                lanceRepository.Save(lance);
+                return Ok(lance);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar lance");
             }
-            Lance? ultimoLance = lanceRepository.GetUltimoLance(lanceForm.LoteId);
-            if (ultimoLance != null & lanceForm.Valor <= ultimoLance.Valor){
-                return BadRequest("Valor de lance deve ser maior que o lance atual");
-            }
-            Lance lance = lanceForm.Cadastro(compradorId);
-            lanceRepository.Save(lance);
-            return Ok(lance);
         }
         [Authorize]
         [HttpGet("maiorlance/{loteId}")]
@@ -145,11 +154,15 @@ namespace LivArt.Controllers
             [FromServices] LanceRepository lanceRepository
             )
         {
-            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
-            if (ultimoLance == null){
-                return NotFound("Não foram encontrados lances para este lote.");
+            try{
+                Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+                if (ultimoLance == null){
+                    return NotFound("Não foram encontrados lances para este lote.");
+                }
+                return Ok(ultimoLance);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer último lance.");
             }
-            return Ok(ultimoLance);
         }
         [HttpPost("cadastro/pagamento")]
         public IActionResult CadastroPagamento(
