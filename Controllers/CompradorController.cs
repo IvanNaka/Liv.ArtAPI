@@ -27,11 +27,15 @@ namespace LivArt.Controllers
             [FromServices] EnderecoRepository enderecoRepository
             )
         {
-            Endereco enderecoObj = compradorForm.EnderecoCadastro();
-            enderecoRepository.Save(enderecoObj);
-            Comprador comprador = compradorForm.CompradorCadastro(enderecoObj);
-            compradorRepository.Save(comprador);
-            return Ok(comprador);
+            try{
+                Endereco enderecoObj = compradorForm.EnderecoCadastro();
+                enderecoRepository.Save(enderecoObj);
+                Comprador comprador = compradorForm.CompradorCadastro(enderecoObj);
+                compradorRepository.Save(comprador);
+                return Ok(comprador);
+            }catch(Exception e){
+                return BadRequest("Erro ao realizar cadastro");
+            }
         }
 
         [HttpPost("login")]
@@ -40,29 +44,34 @@ namespace LivArt.Controllers
             [FromServices] CompradorRepository compradorRepository
             )
         {
-            string Username = loginRequest.Username;
-            string senha = loginRequest.Senha;
-            var user = compradorRepository.Login(Username, senha);
-            if(user == null){
-                return NotFound("Usuário e/ou senha incorreto!");
-            }
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(JwtRegisteredClaimNames.NameId, user.CompradorId.ToString()),
-            };
-            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              claims,
-              expires: DateTime.Now.AddDays(30),
-              signingCredentials: credentials);
+            try{
+                string Username = loginRequest.Username;
+                string senha = loginRequest.Senha;
+                var user = compradorRepository.Login(Username, senha);
+                if(user == null){
+                    return NotFound("Usuário e/ou senha incorreto!");
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.CompradorId.ToString()),
+                };
+                var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
+                  _config["Jwt:Issuer"],
+                  claims,
+                  expires: DateTime.Now.AddDays(30),
+                  signingCredentials: credentials);
 
-            var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
-            HttpContext.Session.SetInt32("_compradorId", user.CompradorId);
-            HttpContext.Session.SetString("_compradorUsername", user.Username);
-            return Ok(token);
+                var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                HttpContext.Session.SetInt32("_compradorId", user.CompradorId);
+                HttpContext.Session.SetString("_compradorUsername", user.Username);
+                return Ok(token);
+            }catch(Exception e){
+                return BadRequest("Erro ao realizar login");
+            }
+
         }
         [Authorize]
         [HttpGet("lista/obras")]
@@ -71,11 +80,15 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            List<ObraArte>? listaObras = obrasArteRepository.GetObras(filtros);
-            if (listaObras == null){
-                return NotFound("Não foram encontradas obras");
+            try{
+                List<ObraArte>? listaObras = obrasArteRepository.GetObras(filtros);
+                if (listaObras == null){
+                    return NotFound("Não foram encontradas obras");
+                }
+                return Ok(listaObras);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer obras");
             }
-            return Ok(listaObras);
         }
         [Authorize]
         [HttpGet("lista/leiloes")]
@@ -83,11 +96,16 @@ namespace LivArt.Controllers
             [FromServices] LeilaoRepository leilaoRepository
             )
         {
-            List<Leilao>? listaLeilao = leilaoRepository.GetLeiloes();
-            if (listaLeilao == null){
-                return NotFound("Não foram encontrados leilões disponíveis");
+            try{
+                List<Leilao>? listaLeilao = leilaoRepository.GetLeiloes();
+                if (listaLeilao == null){
+                    return NotFound("Não foram encontrados leilões disponíveis");
+                }
+                return Ok(listaLeilao);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer leilões disponíveis");
             }
-            return Ok(listaLeilao);
+
         }
         [Authorize]
         [HttpGet("lista/lote")]
