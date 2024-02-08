@@ -45,6 +45,9 @@ namespace LivArt.Controllers
             if(user.StatusId == "pendente_avaliador"){
                 return BadRequest("Usuário aguardando confirmação da Curadoria");
             }
+            if(user.StatusId == "reprovado_avaliador"){
+                return BadRequest("Usuário reprovado pela Curadoria");
+            }
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
