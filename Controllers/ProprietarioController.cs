@@ -151,6 +151,35 @@ namespace LivArt.Controllers
 
             return Ok(leilaoId);
         }
+
+        [Authorize]
+        [HttpGet("leilao/entrega")]
+        public IActionResult GetEntrega(
+        int compradorId,
+        [FromServices] EntregaRepository entregaRepository
+        )
+        {
+            var entregas = entregaRepository.GetEntregaComprador(compradorId);
+            if (entregas == null || entregas.Count == 0)
+            {
+                return NotFound("Não foram encontradas entregas");
+            }
+            return Ok(entregas);
+        }
+
+        [HttpPost("entrega/cadastro")]
+        public IActionResult CadastroObraProprietario(
+        [FromBody] EntregaCadastroRepository EntregaForm,
+        [FromServices] EntregaRepository entregaRepository
+        )
+        {
+            Entrega entrega = EntregaForm.Cadastro();
+            entregaRepository.Save(entrega);
+            return Ok();
+        }
+
+
+
     }
 }
 
