@@ -25,42 +25,50 @@ namespace LivArt.Controllers
             [FromServices] CuradorRepository curadorRepository
             )
         {
-            string Username = loginRequest.Username;
-            string senha = loginRequest.Senha;
-            var user = curadorRepository.Login(Username, senha);
-            if(user == null){
-                return NotFound("Usuário e/ou senha incorreto!");
-            }
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(JwtRegisteredClaimNames.NameId, user.CuradorId.ToString()),
-            };
-            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              claims,
-              expires: DateTime.Now.AddDays(30),
-              signingCredentials: credentials);
+            try{
+                string Username = loginRequest.Username;
+                string senha = loginRequest.Senha;
+                var user = curadorRepository.Login(Username, senha);
+                if(user == null){
+                    return NotFound("Usuário e/ou senha incorreto!");
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.CuradorId.ToString()),
+                };
+                var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
+                  _config["Jwt:Issuer"],
+                  claims,
+                  expires: DateTime.Now.AddDays(30),
+                  signingCredentials: credentials);
 
-            var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
-            HttpContext.Session.SetInt32("_curadorId", user.CuradorId);
-            HttpContext.Session.SetString("_curadorUsername", user.Username);
-            return Ok(token);
+                var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                HttpContext.Session.SetInt32("_curadorId", user.CuradorId);
+                HttpContext.Session.SetString("_curadorUsername", user.Username);
+                return Ok(token);
+            }catch(Exception e){    
+                return BadRequest("Erro ao realizar login.");
+            }
         }
         
         [Authorize]
         [HttpGet("pendentes/avaliador")]
-        public IActionResult GetCadastrosPendetesAvaliador(
+        public IActionResult GetCadastrosPendentesAvaliador(
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
-            List<Avaliador>? listaAvaliadoresPendentes = avaliadorRepository.GetCadastrosPendentes();
-            if (listaAvaliadoresPendentes == null){
-                NotFound("Não foram encontrados cadastros pendentes");
+            try{
+                List<Avaliador>? listaAvaliadoresPendentes = avaliadorRepository.GetCadastrosPendentes();
+                if (listaAvaliadoresPendentes == null){
+                    NotFound("Não foram encontrados cadastros pendentes");
+                }
+                return Ok(listaAvaliadoresPendentes);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer cadastros pendentes de avaliadores");
             }
-            return Ok(listaAvaliadoresPendentes);
         }
 
         [Authorize]
@@ -70,11 +78,15 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
-            Avaliador? avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
-            if (avaliador == null){
-                NotFound("Não foi possível encontrar o avaliador desejado");
+            try{
+                Avaliador? avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
+                if (avaliador == null){
+                    NotFound("Não foi possível encontrar o avaliador desejado");
+                }
+                return Ok(avaliador);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer avaliador");
             }
-            return Ok(avaliador);
         }
         
         [Authorize]
@@ -85,11 +97,15 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
-            Avaliador? avaliador = avaliadorRepository.UpdateStatusAvaliador(avaliadorId, status);
-            if (avaliador == null){
-                NotFound("Não foi possível encontrar o avaliador desejado");
+            try{
+                Avaliador? avaliador = avaliadorRepository.UpdateStatusAvaliador(avaliadorId, status);
+                if (avaliador == null){
+                    NotFound("Não foi possível encontrar o avaliador desejado");
+                }
+                return Ok(avaliador);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar status avaliador");
             }
-            return Ok(avaliador);
         }
         [Authorize]
         [HttpGet("pendentes/proprietarios")]
@@ -97,11 +113,15 @@ namespace LivArt.Controllers
             [FromServices] ProprietarioRepository proprietarioRepository
             )
         {
-            List<Proprietario>? listaProprietarioPendentes = proprietarioRepository.GetCadastrosPendentes();
-            if (listaProprietarioPendentes == null){
-                NotFound("Não foram encontrados cadastros pendentes");
+            try{
+                List<Proprietario>? listaProprietarioPendentes = proprietarioRepository.GetCadastrosPendentes();
+                if (listaProprietarioPendentes == null){
+                    NotFound("Não foram encontrados cadastros pendentes");
+                }
+                return Ok(listaProprietarioPendentes);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar status proprietários");
             }
-            return Ok(listaProprietarioPendentes);
         }
 
         [Authorize]
@@ -111,11 +131,15 @@ namespace LivArt.Controllers
             [FromServices] ProprietarioRepository proprietarioRepository
             )
         {
-            Proprietario? proprietario = proprietarioRepository.GetProprietario(proprietarioId);
-            if (proprietario == null){
-                NotFound("Não foi possível encontrar o proprietário desejado");
+            try{
+                Proprietario? proprietario = proprietarioRepository.GetProprietario(proprietarioId);
+                if (proprietario == null){
+                    NotFound("Não foi possível encontrar o proprietário desejado");
+                }
+                return Ok(proprietario);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer proprietário.");
             }
-            return Ok(proprietario);
         }
         [Authorize]
         [HttpPatch("pendentes/avaliador/{proprietarioId}/{status}")]
@@ -125,25 +149,33 @@ namespace LivArt.Controllers
             [FromServices] ProprietarioRepository proprietarioRepository
             )
         {
-            Proprietario? proprietario = proprietarioRepository.UpdateStatusProprietario(proprietarioId, status);
-            if (proprietario == null){
-                NotFound("Não foi possível encontrar o proprietario desejado");
+            try{
+                Proprietario? proprietario = proprietarioRepository.UpdateStatusProprietario(proprietarioId, status);
+                if (proprietario == null){
+                    NotFound("Não foi possível encontrar o proprietario desejado");
+                }
+                return Ok(proprietario);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer proprietario.");
             }
-            return Ok(proprietario);
         }
 
         [Authorize]
         [HttpGet("lista/obras")]
-        public IActionResult GetObrasAvaliador(
+        public IActionResult GetObras(
             [FromQuery] ObrasArteFiltrosRepository filtros,
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            List<ObraArte> listaObras = obrasArteRepository.GetObras(filtros);
-            if (listaObras == null){
-                return NotFound("Não foram encontradas obras disponíveis");
-            }
-            return Ok(listaObras);
+            try{
+                List<ObraArte> listaObras = obrasArteRepository.GetObras(filtros);
+                if (listaObras == null){
+                    return NotFound("Não foram encontradas obras disponíveis");
+                }
+                return Ok(listaObras);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer obras");
+            }   
         }
 
         [Authorize]
@@ -153,11 +185,15 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            ObraArte obra = obrasArteRepository.GetObrasId(obraId);
-            if (obra == null){
-                return NotFound("Não foi possível encontrar a obra desejada.");
+            try{
+                ObraArte obra = obrasArteRepository.GetObrasId(obraId);
+                if (obra == null){
+                    return NotFound("Não foi possível encontrar a obra desejada.");
+                }
+                return Ok(obra);
+            }catch{
+                return BadRequest("Erro ao trazer obra");
             }
-            return Ok(obra);
         }
         [Authorize]
         [HttpGet("lista/laudo")]
@@ -166,11 +202,15 @@ namespace LivArt.Controllers
             [FromServices] LaudoRepository laudoRepository
             )
         {
-            List<Laudo> listaLaudos = laudoRepository.GetLaudos(filtros);
-            if (listaLaudos == null){
-                return NotFound("Não foram encontrados laudos disponíveis");
+            try{
+                List<Laudo> listaLaudos = laudoRepository.GetLaudos(filtros);
+                if (listaLaudos == null){
+                    return NotFound("Não foram encontrados laudos disponíveis");
+                }
+                return Ok(listaLaudos);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer laudos disponíveis");
             }
-            return Ok(listaLaudos);
         }
 
         [Authorize]
@@ -180,11 +220,15 @@ namespace LivArt.Controllers
             [FromServices] LaudoRepository laudoRepository
             )
         {
-            Laudo laudo = laudoRepository.GetLaudo(laudoId);
-            if (laudo == null){
-                return NotFound("Não foi possível encontrar o laudo desejado.");
+            try{
+                Laudo laudo = laudoRepository.GetLaudo(laudoId);
+                if (laudo == null){
+                    return NotFound("Não foi possível encontrar o laudo desejado.");
+                }
+                return Ok(laudo);
+            }catch{
+                return BadRequest("Erro ao trazer laudo");
             }
-            return Ok(laudo);
         }        
 
         [HttpPost("cadastro/leilao")]
@@ -193,9 +237,14 @@ namespace LivArt.Controllers
             [FromServices] LeilaoRepository leilaoRepository
             )
         {
-            Leilao leilao = leilaoForm.Cadastro();
-            leilaoRepository.Save(leilao);
-            return Ok(leilao);
+            try{
+                Leilao leilao = leilaoForm.Cadastro();
+                leilaoRepository.Save(leilao);
+                return Ok(leilao);
+            }catch{
+                return BadRequest("Erro ao cadastrar leilão");
+            }
+
         }
         [Authorize]
         [HttpGet("lista/leilao")]
@@ -203,11 +252,15 @@ namespace LivArt.Controllers
             [FromServices] LeilaoRepository leilaoRepository
             )
         {
-            List<Leilao>? listaLeiloes = leilaoRepository.GetLeiloes();
-            if (listaLeiloes == null){
-                return NotFound("Não foram encontrados leiloes disponíveis");
+            try{
+                List<Leilao>? listaLeiloes = leilaoRepository.GetLeiloes();
+                if (listaLeiloes == null){
+                    return NotFound("Não foram encontrados leiloes disponíveis");
+                }
+                return Ok(listaLeiloes);
+            }catch{
+                return BadRequest("Erro ao trazer leilões");
             }
-            return Ok(listaLeiloes);
         }
 
         [HttpPost("cadastro/lote")]
@@ -216,9 +269,13 @@ namespace LivArt.Controllers
             [FromServices] LoteRepository loteRepository
             )
         {
-            Lote lote = loteForm.Cadastro();
-            loteRepository.Save(lote);
-            return Ok(lote);
+            try{
+                Lote lote = loteForm.Cadastro();
+                loteRepository.Save(lote);
+                return Ok(lote);
+            }catch{
+                return BadRequest("Erro ao cadastrar Lote");
+            }
         }
 
         [HttpPost("cadastro/lote/obra")]
@@ -227,8 +284,12 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obraRepository
             )
         {
-            ObraArte obra = obraRepository.UpdateLoteObra(loteForm.ObraId, loteForm.LoteId);
-            return Ok(obra);
+            try{
+                ObraArte obra = obraRepository.UpdateLoteObra(loteForm.ObraId, loteForm.LoteId);
+                return Ok(obra);
+            }catch{
+                return BadRequest("Erro ao cadastrar obra em lote");
+            }
         }
 
         [Authorize]
@@ -238,11 +299,16 @@ namespace LivArt.Controllers
             [FromServices] LanceRepository lanceRepository
             )
         {
-            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
-            if (ultimoLance == null){
-                return NotFound("Não foram encontrados lances para este lote.");
+            try{
+                Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+                if (ultimoLance == null){
+                    return NotFound("Não foram encontrados lances para este lote.");
+                }
+                return Ok(ultimoLance);
             }
-            return Ok(ultimoLance);
+            catch{
+                return BadRequest("Erro ao trazer lance do lote");
+            }
         }
         [Authorize]
         [HttpGet("lista/entregas")]
@@ -250,11 +316,16 @@ namespace LivArt.Controllers
             [FromServices] EntregaRepository entregaRepository
             )
         {
-        List<Entrega>? listaEntregas = entregaRepository.GetTodasEntregas();
-        if (listaEntregas == null){
-            return NotFound("Não foram encontrados entregas");
-        }
-        return Ok(listaEntregas);
+            try{
+                List<Entrega>? listaEntregas = entregaRepository.GetTodasEntregas();
+                if (listaEntregas == null){
+                    return NotFound("Não foram encontrados entregas");
+                }
+                return Ok(listaEntregas);
+            }catch{
+                return BadRequest("Erro ao trazer entregas");
+            }
+
         }
 
         [Authorize]
@@ -264,8 +335,13 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            ObraArte obra = obrasArteRepository.EditObra(obraArtePatch);
-            return Ok(obra);
+            try{
+                ObraArte obra = obrasArteRepository.EditObra(obraArtePatch);
+                return Ok(obra);
+            }catch{
+                return BadRequest("Erro ao editar dados da obra");
+            }
+
         }
         [Authorize]
         [HttpPatch("delete/obra/{obraId}")]
@@ -274,8 +350,13 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            ObraArte obra = obrasArteRepository.DeleteObra(obraId);
-            return Ok();
+            try{
+                ObraArte obra = obrasArteRepository.DeleteObra(obraId);
+                return Ok();
+            }catch(Exception e){
+                return BadRequest("Erro ao deletar obra");
+            }
+
         }
     }
 }
