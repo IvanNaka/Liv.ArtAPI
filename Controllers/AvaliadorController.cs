@@ -25,9 +25,13 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
-            Avaliador avaliador = avaliadorForm.AvaliadorCadastro();
-            avaliadorRepository.Save(avaliador);
-            return Ok();
+            try{
+                Avaliador avaliador = avaliadorForm.AvaliadorCadastro();
+                avaliadorRepository.Save(avaliador);
+                return Ok(avaliador);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar avaliador");
+            }
         }
 
         [HttpPost("login")]
@@ -36,35 +40,40 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
             )
         {
-            string Username = loginRequest.Username;
-            string senha = loginRequest.Senha;
-            var user = avaliadorRepository.Login(Username, senha);
-            if(user == null){
-                return NotFound("Usuário e/ou senha incorreto!");
-            }
-            if(user.StatusId == "pendente_avaliador"){
-                return BadRequest("Usuário aguardando confirmação da Curadoria");
-            }
-            if(user.StatusId == "reprovado_avaliador"){
-                return BadRequest("Usuário reprovado pela Curadoria");
-            }
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(JwtRegisteredClaimNames.NameId, user.AvaliadorId.ToString()),
-            };
-            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              claims,
-              expires: DateTime.Now.AddDays(30),
-              signingCredentials: credentials);
+            try{
+                string Username = loginRequest.Username;
+                string senha = loginRequest.Senha;
+                var user = avaliadorRepository.Login(Username, senha);
+                if(user == null){
+                    return NotFound("Usuário e/ou senha incorreto!");
+                }
+                if(user.StatusId == "pendente_avaliador"){
+                    return Unauthorized("Usuário aguardando confirmação da Curadoria");
+                }
+                if(user.StatusId == "reprovado_avaliador"){
+                    return Unauthorized("Usuário reprovado pela Curadoria");
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.AvaliadorId.ToString()),
+                };
+                var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims,
+                expires: DateTime.Now.AddDays(30),
+                signingCredentials: credentials);
 
-            var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
-            HttpContext.Session.SetInt32("_avaliadorId", user.AvaliadorId);
-            HttpContext.Session.SetString("_avaliadorUsername", user.Username);
-            return Ok(token);
+                var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                HttpContext.Session.SetInt32("_avaliadorId", user.AvaliadorId);
+                HttpContext.Session.SetString("_avaliadorUsername", user.Username);
+                return Ok(token);
+            }catch(Exception e){
+                return BadRequest("Erro ao realizar login");
+            }
+            
         }
 
         [Authorize]
@@ -74,12 +83,16 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
-            if (avaliadorId == null){
-                return Unauthorized("Acesso negado.");
+            try{
+                int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
+                if (avaliadorId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
+                return Ok(listaObras);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer obras");
             }
-            List<ObraArte> listaObras = obrasArteRepository.GetObrasAvaliador(avaliadorId, filtros);
-            return Ok(listaObras);
         }
 
         [Authorize]
@@ -89,11 +102,15 @@ namespace LivArt.Controllers
             [FromServices] ObrasArteRepository obrasArteRepository
             )
         {
-            ObraArte obra = obrasArteRepository.GetObrasId(obraId);
-            if (obra == null){
-                return NotFound("Não foi possível encontrar a obra desejada.");
+            try{
+                ObraArte obra = obrasArteRepository.GetObrasId(obraId);
+                if (obra == null){
+                    return NotFound("Não foi possível encontrar a obra desejada.");
+                }
+                return Ok(obra);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer obra");
             }
-            return Ok(obra);
         }
 
         [HttpPost("cadastro/laudo")]
@@ -102,13 +119,17 @@ namespace LivArt.Controllers
             [FromServices] LaudoRepository laudoRepository
             )
         {
-            int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
-            if (avaliadorId == null){
-                return Unauthorized("Acesso negado.");
+            try{
+                int? avaliadorId = HttpContext.Session.GetInt32("_avaliadorId");
+                if (avaliadorId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                Laudo laudo = laudoForm.Cadastro(avaliadorId);
+                laudoRepository.Save(laudo);
+                return Ok(laudo);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar laudo");
             }
-            Laudo laudo = laudoForm.Cadastro(avaliadorId);
-            laudoRepository.Save(laudo);
-            return Ok();
         }
     }
 }
