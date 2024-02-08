@@ -171,15 +171,19 @@ namespace LivArt.Controllers
             [FromServices] CartaoRepository cartaoRepository
             )
         {
-            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
-            if (compradorId == null){
-                return Unauthorized("Acesso negado.");
+            try{
+                int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+                if (compradorId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                Cartao cartao = pagamentoForm.CadastroCartao(compradorId);
+                cartaoRepository.Save(cartao);
+                Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
+                pagamentoRepository.Save(pagamento);
+                return Ok(pagamento);
+            }catch(Exception e){
+                return BadRequest("Erro ao cadastrar pagamento");
             }
-            Cartao cartao = pagamentoForm.CadastroCartao(compradorId);
-            cartaoRepository.Save(cartao);
-            Pagamento pagamento = pagamentoForm.CadastroPagamento(compradorId, cartao.CartaoId);
-            pagamentoRepository.Save(pagamento);
-            return Ok(pagamento);
         }
         [Authorize]
         [HttpGet("lista/entregas")]
@@ -187,15 +191,19 @@ namespace LivArt.Controllers
             [FromServices] EntregaRepository entregaRepository
             )
         {
-            int? compradorId = HttpContext.Session.GetInt32("_compradorId");
-            if (compradorId == null){
-                return Unauthorized("Acesso negado.");
+            try{
+                int? compradorId = HttpContext.Session.GetInt32("_compradorId");
+                if (compradorId == null){
+                    return Unauthorized("Acesso negado.");
+                }
+                List<Entrega>? listaEntregas = entregaRepository.GetEntregaComprador((int)compradorId);
+                if (listaEntregas == null){
+                    return NotFound("Não foram encontrados entregas");
+                }
+                return Ok(listaEntregas);
+            }catch(Exception e){
+                return BadRequest("Erro ao trazer informações das entregas");
             }
-            List<Entrega>? listaEntregas = entregaRepository.GetEntregaComprador((int)compradorId);
-            if (listaEntregas == null){
-                return NotFound("Não foram encontrados entregas");
-            }
-            return Ok(listaEntregas);
         }
     }
 }
