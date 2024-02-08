@@ -27,9 +27,17 @@ namespace LivArt.Controllers
             [FromServices] ProprietarioRepository proprietarioRepository
             )
         {
-            Proprietario proprietario = proprietarioForm.ProprietarioCadastro();
-            proprietarioRepository.Save(proprietario);
-            return Ok();
+            try
+            {
+                Proprietario proprietario = proprietarioForm.ProprietarioCadastro();
+                proprietarioRepository.Save(proprietario);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao cadastrar proprietário.");
+            }
+
         }
 
         [HttpPost("login")]
@@ -38,40 +46,55 @@ namespace LivArt.Controllers
             [FromServices] ProprietarioRepository proprietarioRepository
             )
         {
-            string Username = loginRequest.Username;
-            string senha = loginRequest.Senha;
-            var user = proprietarioRepository.Login(Username, senha);
-            if (user == null)
+            try
             {
-                return NotFound("Usuário e/ou senha incorreto!");
-            }
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(JwtRegisteredClaimNames.NameId, user.ProprietarioId.ToString()),
-            };
-            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              claims,
-              expires: DateTime.Now.AddDays(30),
-              signingCredentials: credentials);
+                string Username = loginRequest.Username;
+                string senha = loginRequest.Senha;
+                var user = proprietarioRepository.Login(Username, senha);
+                if (user == null)
+                {
+                    return NotFound("Usuário e/ou senha incorreto!");
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.ProprietarioId.ToString()),
+                };
+                var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims,
+                expires: DateTime.Now.AddDays(30),
+                signingCredentials: credentials);
 
-            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
-            HttpContext.Session.SetInt32("_proprietarioId", user.ProprietarioId);
-            HttpContext.Session.SetString("_proprietarioUsername", user.Username);
-            return Ok(token);
+                var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                HttpContext.Session.SetInt32("_proprietarioId", user.ProprietarioId);
+                HttpContext.Session.SetString("_proprietarioUsername", user.Username);
+                return Ok(token);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao cadastrar Login.");
+            }
         }
+
 
         [HttpPost("cadastro/obra")]
         public IActionResult CadastroObraProprietario(
             [FromBody] ProprietarioObraCadastroRepository ObraArteForm,
             [FromServices] ObrasArteRepository ObrasArte)
         {
-            ObraArte ObraArte = ObraArteForm.ObraArteCadastro();
-            ObrasArte.Save(ObraArte);  // nao entendi a lógica por aqui
-            return Ok();
+            try
+            {
+                ObraArte ObraArte = ObraArteForm.ObraArteCadastro();
+                ObrasArte.Save(ObraArte);  // nao entendi a lógica por aqui
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao cadastrar Obra.");
+            }
         }
 
         [Authorize]
@@ -106,12 +129,19 @@ namespace LivArt.Controllers
             [FromServices] LaudoRepository laudoRepository
             )
         {
-            Laudo? laudo = laudoRepository.GetLaudo(laudoId);
-            if (laudo == null)
+            try
             {
-                return NotFound("Não foi possível encontrar o laudo desta obra.");
+                Laudo? laudo = laudoRepository.GetLaudo(laudoId);
+                if (laudo == null)
+                {
+                    return NotFound("Não foi possível encontrar o laudo desta obra.");
+                }
+                return Ok(laudo);
             }
-            return Ok(laudo);
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer laudo da obra.");
+            }
         }
 
 
@@ -122,12 +152,20 @@ namespace LivArt.Controllers
             [FromServices] AvaliadorRepository avaliadorRepository
         )
         {
-            Avaliador avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
-            if (avaliador == null)
+            try
             {
-                return NotFound("Avaliador não encontrado");
+                Avaliador avaliador = avaliadorRepository.GetAvaliador(avaliadorId);
+                if (avaliador == null)
+                {
+                    return NotFound("Avaliador não encontrado");
+                }
+                return Ok(avaliador);
             }
-            return Ok(avaliador);
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer avaliador.");
+            }
+
         }
 
         [Authorize]
@@ -137,12 +175,19 @@ namespace LivArt.Controllers
             [FromServices] LanceRepository lanceRepository
         )
         {
-            Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
-            if (ultimoLance == null)
+            try
             {
-                return NotFound("Não foram encontrados lances para este lote.");
+                Lance? ultimoLance = lanceRepository.GetUltimoLance(loteId);
+                if (ultimoLance == null)
+                {
+                    return NotFound("Não foram encontrados lances para este lote.");
+                }
+                return Ok(ultimoLance);
             }
-            return Ok(ultimoLance);
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer maior lance.");
+            }
         }
 
         [Authorize]
@@ -152,17 +197,24 @@ namespace LivArt.Controllers
             [FromServices] LeilaoRepository leilaoRepository
         )
         {
-            Leilao? leilao = leilaoRepository.GetLeilaoId(leilaoId);
-            if (leilao == null)
+            try
             {
-                return NotFound("Leilão não encontrado");
-            }
-            if (leilao.DataFim <= DateTime.Now)
-            {
-                return NotFound("O leilão pesquisado já foi encerrado.");
-            }
+                Leilao? leilao = leilaoRepository.GetLeilaoId(leilaoId);
+                if (leilao == null)
+                {
+                    return NotFound("Leilão não encontrado");
+                }
+                if (leilao.DataFim <= DateTime.Now)
+                {
+                    return NotFound("O leilão pesquisado já foi encerrado.");
+                }
 
-            return Ok(leilaoId);
+                return Ok(leilaoId);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer Informações do Leilão.");
+            }
         }
 
         [Authorize]
@@ -172,12 +224,19 @@ namespace LivArt.Controllers
         [FromServices] EntregaRepository entregaRepository
         )
         {
-            var entregas = entregaRepository.GetEntregaComprador(compradorId);
-            if (entregas == null || entregas.Count == 0)
+            try
             {
-                return NotFound("Não foram encontradas entregas");
+                var entregas = entregaRepository.GetEntregaComprador(compradorId);
+                if (entregas == null || entregas.Count == 0)
+                {
+                    return NotFound("Não foram encontradas entregas");
+                }
+                return Ok(entregas);
             }
-            return Ok(entregas);
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao trazer entregas.");
+            }
         }
 
         [HttpPost("entrega/cadastro")]
@@ -186,14 +245,19 @@ namespace LivArt.Controllers
         [FromServices] EntregaRepository entregaRepository
         )
         {
-            Entrega entrega = EntregaForm.Cadastro();
-            entregaRepository.Save(entrega);
-            return Ok();
+            try
+            {
+                Entrega entrega = EntregaForm.Cadastro();
+                entregaRepository.Save(entrega);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Erro ao cadastrar entrega.");
+            }
         }
 
 
 
     }
 }
-
-
